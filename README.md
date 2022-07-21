@@ -48,4 +48,4 @@ There are several ways to get the chat_id of a channel. We will show two of them
 
 ### How to generate telegram API access credentials?
 
-- View this video: https://www.youtube.com/watch?v=8naENmP3rg4 
+- View this video: https://www.youtube.com/watch?v=8naENmP3rg4

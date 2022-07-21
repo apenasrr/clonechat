@@ -18,8 +18,8 @@ options = parser.parse_args()
 
 if options.orig is None:
 
-    origin_chat = int(input("Digite o id_chat de origem: "))
-    destination_chat = int(input("Digite o id_chat de destino: "))
+    origin_chat = int(input("Enter the origin id_chat:"))
+    destination_chat = int(input("Enter the destination id_chat:"))
 else:
     origin_chat = int(options.orig)
     destination_chat = int(options.dest)
@@ -191,7 +191,6 @@ def foward_video(message, destination_chat):
 def foward_poll(message, destination_chat):
 
     if message.poll.type != "regular":
-        posted += [message.id]
         return
     try:
         tg.send_poll(
@@ -261,13 +260,33 @@ def get_message(origin_chat, message_id):
     return message
 
 
-def get_list_posted():
-    if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, mode="r") as file:
-            posted = json.loads(file.read())
+def task_type():
+
+    print("New cloning or continuation?\n1 = new\n2 = resume")
+    answer = input("Your answer: ")
+    if answer == "1":
+        return 1
+    elif answer == "2":
+        return 2
     else:
-        posted = []
-    return posted
+        print("\nInvalid answer.\n")
+        return task_type()
+
+
+def get_list_posted():
+
+    answer = task_type()
+    if answer == 1:
+        if os.path.exists(CACHE_FILE):
+            os.remove(CACHE_FILE)
+        return []
+    else:
+        if os.path.exists(CACHE_FILE):
+            with open(CACHE_FILE, mode="r") as file:
+                posted = json.loads(file.read())
+                return posted
+        else:
+            return []
 
 
 def wait_a_moment(message_id):
@@ -293,15 +312,13 @@ def main():
 
     message_id = 0
     last_message_id = get_last_message_id(origin_chat)
-
     list_posted = get_list_posted()
-
     while message_id < last_message_id:
         message_id = message_id + 1
-        wait_a_moment(message_id)
         if message_id in list_posted:
             continue
 
+        wait_a_moment(message_id)
         message = get_message(origin_chat, message_id)
 
         if message.empty or message.service:
