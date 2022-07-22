@@ -1,17 +1,50 @@
 
 # Clonechat
 
-Clonagem de todas as postagens de um Canal/Grupo do telegram para um outro Canal/Grupo.
+Clona todas as postagens de um Canal/Grupo do telegram para um outro Canal/Grupo.
 
 Backup seguro. Guarda e protege as postagens no chat destino de eventual derrubada de postagens no chat de origem.
 
 ## Configuração
-- Execute o arquivo `update_libs.bat` para atualizar as dependências
-- Registre suas credenciais de acesso a API do telegram no arquivo `credentials.py`
+- Instale o Python
+  - Acesse o site python.org e [baixe](https://www.python.org/downloads/) a versão estável mais nova
+  - Instale. No form 'Advanced Options', marque `Add python 3.?? to PATH`
+- Atualize as dependências
+  - Execute o arquivo `update_libs.bat` para atualizar as dependênciaiis
+  - Se aparecer a mensagem
+- Cadastre suas credenciais
+  - Abra o arquivo `credentials.py` com um editor de texto, como o bloco de notas
+    - Registre suas credenciais de acesso a API (api_id e api_hash) do telegram
+    - Exemplo de preenchimento:
+      - `api_id = 1111111`
+      - `api_hash = "sKwrdX7tb2xFDkPU9h0AsKwrdX7tb2xF"`
+    - Os valores informados acima são apenas exemplos. Os valores são inválidos
+    - Salve e feche o arquivo
+> Não sabe obter api_id e api_hash? Veja o tópico "Perguntas frequentes"
 
 ## USO
 
-### via linha de comando
+### Opção 1: Via menu em terminal
+
+- Execute o arquivo `exec_clonechat.bat`
+- Digite o chat_id do canal/grupo de origem. Se o `ctrl+v` não funcionar, clique com o botão direito do mouse no terminal
+- Confirme com [ENTER]
+- Digite o chat_id do canal/grupo de destino
+- Confirme com [ENTER]
+- Informe se deseja iniciar uma nova clonagem ou continuar uma clonagem iniciada anteriormente
+  - Digite `1` para nova clonada
+  - ou `2` para continuar
+- Confirme com [ENTER]
+- Na primeira vez que você for usar, será preciso autenticar uma conexão com o telegram. Mas será só da primeira vez! E depois nunca mais. :) Autenticar é simple, segue os passos:
+  > `"Enter phone number or bot token:"`
+  - Aparecerá esta mensagem pedindo o número de seu telefone em formato internacional.
+  - Digite seu número de telefone com prefixo `+55` para o caso de telefone brasileiro, seguido do DDD local e seu número de telefone.
+    - Exemplo: Para telefone de São Paulo, com ddd 11, deverá ser digitado algo como: `+5511995429405`
+  - Na mensagem perguntando se o número está correto, digite `y`.
+  - Será enviado um código para seu telegram, que você deve digitar no terminal.
+  - Por fim, se você tiver 'segurança de 2 fatores' (2fa) ativado na sua conta, será solicitado sua senha.
+
+### Opção 2: via linha de comando
 
 > Abra o terminal do windows na pasta do clone chat e digite:
 
@@ -19,25 +52,13 @@ Comando: python clonechat.py --orig={chat_id do canal/grupo de origem} --dest=-{
 
 Exemplo: `python clonechat.py --orig=-100222222 --dest=-10011111111`
 
-### Via menu em terminal
-
-- Execute o arquivo `exec_clonechat.bat`
-- Digite o chat_id do canal/grupo de origem. Se o `ctrl+v` não funcionar, clique com o botão direito do mouse no terminal.
-- Confirme com [ENTER]
-- Digite o chat_id do canal/grupo de destino
-- Confirme com [ENTER]
-- Informe se deseja iniciar uma nova clonagem ou continuar uma clonagem iniciada anteriormente.
-  - Digite `1` para nova clonada
-  - ou `2` para continuar
-- Confirme com [ENTER]
-
 ### Finalização
 
 - Ao terminar a clonagem, apague o arquivo `posted.json`.
 
 > Observação: Caso este arquivo não seja apagado, na próxima vez que executar o script via linha de comando a clonagem será continuada de onde parou.
 
-## Dúvidas
+## Perguntas frequentes
 
 ### Como conseguir o chat_id de um canal ou grupo
 
@@ -54,3 +75,15 @@ Existem várias formas de obter o chat_id de um canal. Mostraremos duas delas:
 ### Como gerar credenciais de acesso a API do telegram?
 
 - Leia o tópico "Configuração de token" do tutorial encontrado em: https://github.com/apenasrr/zimatise_docs#configura%C3%A7%C3%A3o-de-token
+
+- Para obter as credenciais para a API do Telegram:
+  - Acesse a área de [gestão de apps](https://my.telegram.org/auth?to=apps) no site do telegram.
+  - Entre com seu número de telefone em modelo internacional. Com prefixo `+55` para o caso de telefone brasileiro, seguido do DDD local e seu número de telefone.
+    - Exemplo: Para telefone de São Paulo, com ddd 11, deverá ser digitado algo como: `+5511995429405`
+  - Preencha o formulário
+    - Título do aplicativo: digite qualquer coisa
+    - Nome curto: digite qualquer coisa entre 5 e 12 letras
+    - URL: ignore
+    - Plataforma: Ignore. Pode deixar marcado o padrão Android.
+    - Finalize o formulário e aparecerá seus códigos de `api_id` e `api_hash`
+  - Para assistir o processo em detalhes, assista [este vídeo](https://www.youtube.com/watch?v=8naENmP3rg4) que exemplifica tudo rapidamente.
