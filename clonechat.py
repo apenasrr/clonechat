@@ -1,5 +1,4 @@
 import argparse
-from importlib.metadata import files
 import json
 import os
 import time
@@ -276,7 +275,7 @@ def task_type():
 def type_to_copy():
     opt = ''
     files_type_excluded = []
-    print("Choose a type of file to send")
+    print("\n")
     print("0 - All files")
     print("1 - Photos")
     print("2 - Text")
@@ -287,8 +286,8 @@ def type_to_copy():
     print("7 - Voice message")
     print("8 - Videos")
     print("9 - Polls\n")
-    print("Choose the number(s) above")
-    print("For example, to copy documents and videos type: 3 8")
+    print("Enter the number(s) of file type.")
+    print("For example, to copy documents and videos type: 3,8")
     opt = input("Your answer: ") 
     if not len(opt) or '0' in opt: 
         return files_type_excluded
@@ -311,7 +310,9 @@ def type_to_copy():
             files_type_excluded += [foward_video]
         if '9' not in opt:
             files_type_excluded += [foward_poll]
-
+        if len(files_type_excluded) == 9:
+            print("Invalid option! Try again")
+            return type_to_copy()
     return files_type_excluded
 
 def get_list_posted():
