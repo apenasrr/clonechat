@@ -8,28 +8,38 @@ Backup seguro. Guarda e protege as postagens no chat destino de eventual derruba
 ## Configuração
 - Instale o Python
   - Acesse o site python.org e [baixe](https://www.python.org/downloads/) a versão estável mais nova
-  - Instale. No form 'Advanced Options', marque `Add python 3.?? to PATH`
+  - IMPORTANTE: Antes de clicar para instalar marque a opção `Add python 3.?? to PATH` no final do instalador (no lugar de `??` vão ser números)
+  - Instale.
 - Atualize as dependências
-  - Execute o arquivo `update_libs.bat` para atualizar as dependênciaiis
-  - Se aparecer a mensagem
+  - Execute o arquivo `update_libs.bat` para atualizar as dependências
+  - Espere terminar e aperte qualquer tecla para continuar.
 - Cadastre suas credenciais
-  - Abra o arquivo `credentials.py` com um editor de texto, como o bloco de notas
-    - Registre suas credenciais de acesso a API (api_id e api_hash) do telegram
-    - Exemplo de preenchimento:
-      - `api_id = 1111111`
-      - `api_hash = "sKwrdX7tb2xFDkPU9h0AsKwrdX7tb2xF"`
+  - Abra o bloco de notas ou outro editor de texto
+  - Arraste o arquivo `credentials.py` para dentro do bloco de notas ou do editor de texto
+    - Registre suas credenciais de acesso a API (api_id e api_hash) do Telegram
+    > Não sabe obter api_id e api_hash? Veja o tópico ["Perguntas frequentes"](#perguntas-frequentes)
+    - Caso seu api_id seja `1111123` e o api_hash seja `sKwrdX7tb2xFDkPU9h0AsKwrdX7tb2xF` o arquivo deve ficar preenchido da seguinte maneira:
+    ~~~python
+      api_id = 1111123
+      api_hash = "sKwrdX7tb2xFDkPU9h0AsKwrdX7tb2xF"
+    ~~~
     - Os valores informados acima são apenas exemplos. Os valores são inválidos
     - Salve e feche o arquivo
-> Não sabe obter api_id e api_hash? Veja o tópico "Perguntas frequentes"
+    
+
 
 ## USO
+
+Para usar você precisa do chat_id do canal de origem e o chat_id do canal de destino.
+
+> Não sabe obter chat_id de um grupo/canal? Veja o tópico ["Como conseguir o chat id de um canal ou grupo"](#como-conseguir-o-chatid-de-um-canal-ou-grupo)
 
 ### Opção 1: Via menu em terminal
 
 - Execute o arquivo `exec_clonechat.bat`
 - Digite o chat_id do canal/grupo de origem. Se o `ctrl+v` não funcionar, clique com o botão direito do mouse no terminal
 - Confirme com [ENTER]
-- Digite o chat_id do canal/grupo de destino
+- Digite o chat_id do canal/grupo de destino.
 - Confirme com [ENTER]
 - Informe se deseja iniciar uma nova clonagem ou continuar uma clonagem iniciada anteriormente
   - Digite `1` para nova clonada
@@ -46,7 +56,7 @@ Backup seguro. Guarda e protege as postagens no chat destino de eventual derruba
 
 ### Opção 2: via linha de comando
 
-> Abra o terminal do windows na pasta do clone chat e digite:
+- Abra o terminal do windows na pasta do clone chat e digite:
 
 Comando: python clonechat.py --orig={chat_id do canal/grupo de origem} --dest=-{chat_id do canal/grupo de destino}
 
@@ -54,9 +64,9 @@ Exemplo: `python clonechat.py --orig=-100222222 --dest=-10011111111`
 
 ### Finalização
 
-- Ao terminar a clonagem, apague o arquivo `posted.json`.
+- Ao terminar a clonagem, apague o arquivo `posted.json` caso não vá mais copiar o canal!
 
-> Observação: Caso este arquivo não seja apagado, na próxima vez que executar o script via linha de comando a clonagem será continuada de onde parou.
+> Observação: Caso este arquivo não seja apagado, na próxima vez que executar o script via linha de comando a clonagem será continuada de onde parou (desde que escolhida a opção `2` ao iniciar o programa).
 
 ## Perguntas frequentes
 
