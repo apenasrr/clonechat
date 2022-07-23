@@ -1,4 +1,5 @@
 import argparse
+from importlib.metadata import files
 import json
 import os
 import time
@@ -272,6 +273,46 @@ def task_type():
         print("\nInvalid answer.\n")
         return task_type()
 
+def type_to_copy():
+    opt = ''
+    files_type_excluded = []
+    print("Choose a type of file to send")
+    print("0 - All files")
+    print("1 - Photos")
+    print("2 - Text")
+    print("3 - Documents (pdf, zip, rar, ...)")
+    print("4 - Stickers")
+    print("5 - Animation")
+    print("6 - Audio files (music)")
+    print("7 - Voice message")
+    print("8 - Videos")
+    print("9 - Polls\n")
+    print("Choose the number(s) above")
+    print("For example, to copy documents and videos type: 3 8")
+    opt = input("Your answer: ") 
+    if not len(opt) or '0' in opt: 
+        return files_type_excluded
+    else:
+        if '1' not in opt: 
+            files_type_excluded += [foward_photo]
+        if '2' not in opt:
+            files_type_excluded += [foward_text]
+        if '3' not in opt:
+            files_type_excluded += [foward_document]
+        if '4' not in opt:
+            files_type_excluded += [foward_sticker]
+        if '5' not in opt:
+            files_type_excluded += [foward_animation]
+        if '6' not in opt:
+            files_type_excluded += [foward_audio]
+        if '7' not in opt:
+            files_type_excluded += [foward_voice]
+        if '8' not in opt:
+            files_type_excluded += [foward_video]
+        if '9' not in opt:
+            files_type_excluded += [foward_poll]
+
+    return files_type_excluded
 
 def get_list_posted():
 
@@ -309,7 +350,7 @@ def get_last_message_id(origin_chat):
 
 
 def main():
-
+    files_type_excluded = type_to_copy()
     message_id = 0
     last_message_id = get_last_message_id(origin_chat)
     list_posted = get_list_posted()
@@ -326,6 +367,10 @@ def main():
             continue
 
         func_sender = get_sender(message)
+        if func_sender in files_type_excluded:
+            list_posted += [message.id]
+            update_cache(CACHE_FILE, list_posted)
+            continue
         func_sender(message, destination_chat)
 
         list_posted += [message.id]
