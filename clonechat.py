@@ -183,7 +183,7 @@ def foward_video(message, destination_chat):
             caption=caption,
         )
     except FloodWait as e:
-        time.sleep(e.x)
+        time.sleep(e.value)
         tg.send_video(
             chat_id=destination_chat,
             video=video_id,
