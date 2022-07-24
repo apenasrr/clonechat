@@ -343,7 +343,7 @@ def wait_a_moment(message_id, skip=False):
 
     if message_id != 1:
         if skip:
-            time.sleep(time.sleep(DELAY_SKIP))
+            time.sleep(DELAY_SKIP)
         else:
             if MODE == "bot":
                 time.sleep(DELAY_AMOUNT)
