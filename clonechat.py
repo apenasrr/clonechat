@@ -48,13 +48,14 @@ def foward_photo(message, destination_chat):
             photo=photo_id,
             caption=caption,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_photo(
-            chat_id=destination_chat,
-            photo=photo_id,
-            caption=caption,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_photo(message, destination_chat)
 
 
 def foward_text(message, destination_chat):
@@ -67,14 +68,14 @@ def foward_text(message, destination_chat):
             disable_notification=True,
             disable_web_page_preview=True,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_message(
-            chat_id=destination_chat,
-            text=text,
-            disable_notification=True,
-            disable_web_page_preview=True,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_text(message, destination_chat)
 
 
 def foward_sticker(message, destination_chat):
@@ -82,9 +83,14 @@ def foward_sticker(message, destination_chat):
     sticker_id = message.sticker.file_id
     try:
         tg.send_sticker(chat_id=destination_chat, sticker=sticker_id)
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_sticker(chat_id=destination_chat, sticker=sticker_id)
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_sticker(message, destination_chat)
 
 
 def foward_document(message, destination_chat):
@@ -98,14 +104,14 @@ def foward_document(message, destination_chat):
             disable_notification=True,
             caption=caption,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_document(
-            chat_id=destination_chat,
-            document=document_id,
-            disable_notification=True,
-            caption=caption,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_document(message, destination_chat)
 
 
 def foward_animation(message, destination_chat):
@@ -119,14 +125,14 @@ def foward_animation(message, destination_chat):
             disable_notification=True,
             caption=caption,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_animation(
-            chat_id=destination_chat,
-            animation=animation_id,
-            disable_notification=True,
-            caption=caption,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_animation(message, destination_chat)
 
 
 def foward_audio(message, destination_chat):
@@ -140,14 +146,14 @@ def foward_audio(message, destination_chat):
             disable_notification=True,
             caption=caption,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_audio(
-            chat_id=destination_chat,
-            audio=audio_id,
-            disable_notification=True,
-            caption=caption,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_audio(message, destination_chat)
 
 
 def foward_voice(message, destination_chat):
@@ -161,14 +167,14 @@ def foward_voice(message, destination_chat):
             disable_notification=True,
             caption=caption,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_voice(
-            chat_id=destination_chat,
-            voice=voice_id,
-            disable_notification=True,
-            caption=caption,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_voice(message, destination_chat)
 
 
 def foward_video(message, destination_chat):
@@ -182,14 +188,14 @@ def foward_video(message, destination_chat):
             disable_notification=True,
             caption=caption,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_video(
-            chat_id=destination_chat,
-            video=video_id,
-            disable_notification=True,
-            caption=caption,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_video(message, destination_chat)
 
 
 def foward_poll(message, destination_chat):
@@ -205,16 +211,14 @@ def foward_poll(message, destination_chat):
             allows_multiple_answers=message.poll.allows_multiple_answers,
             disable_notification=True,
         )
+        return
     except FloodWait as e:
         time.sleep(e.value)
-        tg.send_poll(
-            chat_id=destination_chat,
-            question=message.poll.question,
-            options=[option.text for option in message.poll.options],
-            is_anonymous=message.poll.is_anonymous,
-            allows_multiple_answers=message.poll.allows_multiple_answers,
-            disable_notification=True,
-        )
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_poll(message, destination_chat)
 
 
 def get_caption(message):
@@ -250,13 +254,15 @@ def get_sender(message):
     if message.poll:
         return foward_poll
 
+    print(f"\nNot recognized message type:\n")
+    print(message)
     raise Exception
 
 
 def type_to_copy():
+
     answer = ""
     files_type_excluded = []
-    # print("\n")
     print("0 - All files")
     print("1 - Photos")
     print("2 - Text")
@@ -303,11 +309,14 @@ def get_message(origin_chat, message_id):
 
     try:
         message = tg.get_messages(origin_chat, message_id)
+        return message
     except FloodWait as e:
         time.sleep(e.value)
-        message = tg.get_messages(origin_chat, message_id)
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
 
-    return message
+    return get_message(origin_chat, message_id)
 
 
 def task_type():
@@ -345,10 +354,7 @@ def wait_a_moment(message_id, skip=False):
         if skip:
             time.sleep(DELAY_SKIP)
         else:
-            if MODE == "bot":
-                time.sleep(DELAY_AMOUNT)
-            else:
-                time.sleep(DELAY_AMOUNT)
+            time.sleep(DELAY_AMOUNT)
 
 
 def update_cache(CACHE_FILE, list_posted):
@@ -412,7 +418,11 @@ def main():
         print(f"{message_id}/{last_message_id}")
         wait_a_moment(message_id)
 
-    print("Finish chat cloning")
+    print(
+        "\nChat cloning finished! :)\n"
+        + "If you are not going to continue this task for these chats, "
+        + "delete the posted.json file"
+    )
 
 
 config_data = get_config_data(path_file_config="config.ini")
