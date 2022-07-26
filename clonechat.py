@@ -176,6 +176,23 @@ def foward_voice(message, destination_chat):
 
     foward_voice(message, destination_chat)
 
+def foward_video_note(message, destination_chat):
+    
+    video_note_id = message.video_note.file_id
+    try:
+        tg.send_video_note(
+            chat_id=destination_chat,
+            video_note=video_note_id,
+            disable_notification=True
+        )
+        return
+    except FloodWait as e:
+        time.sleep(e.value)
+    except Exception as e:
+        print(f"trying again... Due to: {e}")
+        time.sleep(10)
+
+    foward_video_note(message, destination_chat)
 
 def foward_video(message, destination_chat):
 
@@ -232,7 +249,7 @@ def get_caption(message):
 
 def get_sender(message):
 
-    if message.empty or message.service:
+    if message.dice or message.location:
         return None
 
     if message.photo:
@@ -251,6 +268,8 @@ def get_sender(message):
         return foward_voice
     if message.video:
         return foward_video
+    if message.video_note:
+        return foward_video_note
     if message.poll:
         return foward_poll
 
