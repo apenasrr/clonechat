@@ -176,14 +176,15 @@ def foward_voice(message, destination_chat):
 
     foward_voice(message, destination_chat)
 
+
 def foward_video_note(message, destination_chat):
-    
+
     video_note_id = message.video_note.file_id
     try:
         tg.send_video_note(
             chat_id=destination_chat,
             video_note=video_note_id,
-            disable_notification=True
+            disable_notification=True,
         )
         return
     except FloodWait as e:
@@ -193,6 +194,7 @@ def foward_video_note(message, destination_chat):
         time.sleep(10)
 
     foward_video_note(message, destination_chat)
+
 
 def foward_video(message, destination_chat):
 
@@ -248,9 +250,6 @@ def get_caption(message):
 
 
 def get_sender(message):
-
-    if message.dice or message.location:
-        return None
 
     if message.photo:
         return foward_photo
@@ -400,13 +399,35 @@ def get_files_type_excluded():
         return FILES_TYPE_EXCLUDED
 
 
+def is_empty_message(message, message_id, last_message_id):
+
+    if message.empty or message.service or message.dice or message.location:
+        print(f"{message_id}/{last_message_id} (blank id)")
+        wait_a_moment(message_id, skip=True)
+        return True
+    else:
+        return False
+
+
+def must_be_ignored(func_sender, message_id, last_message_id):
+
+    if func_sender in FILES_TYPE_EXCLUDED:
+        print(f"{message_id}/{last_message_id} (skip by type)")
+        return True
+    else:
+        return False
+
+
 def main():
 
     print(
         f"\n....:: Clonechat - v{version} ::....\n"
         + f"github.com/apenasrr/clonechat/\n"
     )
+
+    global FILES_TYPE_EXCLUDED
     FILES_TYPE_EXCLUDED = get_files_type_excluded()
+
     message_id = 0
     last_message_id = get_last_message_id(origin_chat)
     list_posted = get_list_posted()
@@ -417,24 +438,23 @@ def main():
 
         message = get_message(origin_chat, message_id)
 
-        if message.empty or message.service:
+        if is_empty_message(message, message_id, last_message_id):
             list_posted += [message.id]
-            print(f"{message_id}/{last_message_id} (blank id)")
-            wait_a_moment(message_id, skip=True)
             continue
+
         func_sender = get_sender(message)
 
-        # skip message from a particular type
-        if func_sender in FILES_TYPE_EXCLUDED:
-            print(f"{message_id}/{last_message_id} (skip by type)")
+        if must_be_ignored(func_sender, message_id, last_message_id):
             list_posted += [message.id]
             update_cache(CACHE_FILE, list_posted)
             continue
 
         func_sender(message, destination_chat)
+        print(f"{message_id}/{last_message_id}")
+
         list_posted += [message.id]
         update_cache(CACHE_FILE, list_posted)
-        print(f"{message_id}/{last_message_id}")
+
         wait_a_moment(message_id)
 
     print(
