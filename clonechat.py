@@ -10,7 +10,7 @@ from pyrogram.errors import FloodWait
 import credentials
 from setup import version
 
-CACHE_FILE = "posted.json"
+CACHE_FILE = os.path.join("user", "posted.json")
 DELAY_AMOUNT = 10
 
 
@@ -50,6 +50,7 @@ def foward_photo(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -70,6 +71,7 @@ def foward_text(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -85,6 +87,7 @@ def foward_sticker(message, destination_chat):
         tg.send_sticker(chat_id=destination_chat, sticker=sticker_id)
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -106,6 +109,7 @@ def foward_document(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -127,6 +131,7 @@ def foward_animation(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -148,6 +153,7 @@ def foward_audio(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -169,6 +175,7 @@ def foward_voice(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -188,6 +195,7 @@ def foward_video_note(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -209,6 +217,7 @@ def foward_video(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -232,6 +241,7 @@ def foward_poll(message, destination_chat):
         )
         return
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -272,15 +282,14 @@ def get_sender(message):
     if message.poll:
         return foward_poll
 
-    print(f"\nNot recognized message type:\n")
+    print("\nNot recognized message type:\n")
     print(message)
     raise Exception
 
 
-def type_to_copy():
+def get_input_type_to_copy():
 
     answer = ""
-    files_type_excluded = []
     print("0 - All files")
     print("1 - Photos")
     print("2 - Text")
@@ -296,30 +305,36 @@ def type_to_copy():
     )
     print("For example, to copy photos and documents type: 1,3")
     answer = input("Your answer: ")
-    if not len(answer) or "0" in answer:
+    return answer
+
+
+def get_files_type_excluded_by_input(input_string):
+
+    files_type_excluded = []
+    if input_string == "" or "0" in input_string:
         return files_type_excluded
     else:
-        if "1" not in answer:
+        if "1" not in input_string:
             files_type_excluded += [foward_photo]
-        if "2" not in answer:
+        if "2" not in input_string:
             files_type_excluded += [foward_text]
-        if "3" not in answer:
+        if "3" not in input_string:
             files_type_excluded += [foward_document]
-        if "4" not in answer:
+        if "4" not in input_string:
             files_type_excluded += [foward_sticker]
-        if "5" not in answer:
+        if "5" not in input_string:
             files_type_excluded += [foward_animation]
-        if "6" not in answer:
+        if "6" not in input_string:
             files_type_excluded += [foward_audio]
-        if "7" not in answer:
+        if "7" not in input_string:
             files_type_excluded += [foward_voice]
-        if "8" not in answer:
+        if "8" not in input_string:
             files_type_excluded += [foward_video]
-        if "9" not in answer:
+        if "9" not in input_string:
             files_type_excluded += [foward_poll]
         if len(files_type_excluded) == 9:
             print("Invalid option! Try again")
-            return type_to_copy()
+            return get_files_type_excluded_by_input(input_string)
     return files_type_excluded
 
 
@@ -329,6 +344,7 @@ def get_message(origin_chat, message_id):
         message = tg.get_messages(origin_chat, message_id)
         return message
     except FloodWait as e:
+        print(f"..FloodWait {e.value} seconds..")
         time.sleep(e.value)
     except Exception as e:
         print(f"trying again... Due to: {e}")
@@ -350,14 +366,14 @@ def task_type():
         return task_type()
 
 
-def get_list_posted():
+def get_list_posted(int_task_type):
 
-    answer = task_type()
-    if answer == 1:
+    # 1 = new
+    if int_task_type == 1:
         if os.path.exists(CACHE_FILE):
             os.remove(CACHE_FILE)
         return []
-    else:
+    else:  # 2 = resume
         if os.path.exists(CACHE_FILE):
             with open(CACHE_FILE, mode="r") as file:
                 posted = json.loads(file.read())
@@ -395,11 +411,13 @@ def get_files_type_excluded():
         FILES_TYPE_EXCLUDED = FILES_TYPE_EXCLUDED
         return FILES_TYPE_EXCLUDED
     except:
-        FILES_TYPE_EXCLUDED = type_to_copy()
+        FILES_TYPE_EXCLUDED = get_files_type_excluded_by_input(
+            get_input_type_to_copy()
+        )
         return FILES_TYPE_EXCLUDED
 
 
-def is_empty_message(message, message_id, last_message_id):
+def is_empty_message(message, message_id, last_message_id) -> bool:
 
     if message.empty or message.service or message.dice or message.location:
         print(f"{message_id}/{last_message_id} (blank id)")
@@ -409,28 +427,43 @@ def is_empty_message(message, message_id, last_message_id):
         return False
 
 
-def must_be_ignored(func_sender, message_id, last_message_id):
+def must_be_ignored(func_sender, message_id, last_message_id) -> bool:
 
     if func_sender in FILES_TYPE_EXCLUDED:
         print(f"{message_id}/{last_message_id} (skip by type)")
+        wait_a_moment(message_id, skip=True)
         return True
     else:
         return False
+
+
+def get_first_message_id(list_posted) -> int:
+
+    if len(list_posted) > 0:
+        message_id = list_posted[-1]
+    else:
+        message_id = 1
+    return message_id
 
 
 def main():
 
     print(
         f"\n....:: Clonechat - v{version} ::....\n"
-        + f"github.com/apenasrr/clonechat/\n"
+        + "github.com/apenasrr/clonechat/\n"
     )
-
     global FILES_TYPE_EXCLUDED
     FILES_TYPE_EXCLUDED = get_files_type_excluded()
-
-    message_id = 0
     last_message_id = get_last_message_id(origin_chat)
-    list_posted = get_list_posted()
+
+    global NEW
+    if NEW is None:
+        int_task_type = task_type()
+    else:
+        int_task_type = NEW
+    list_posted = get_list_posted(int_task_type)
+
+    message_id = get_first_message_id(list_posted)
     while message_id < last_message_id:
         message_id = message_id + 1
         if message_id in list_posted:
@@ -464,26 +497,65 @@ def main():
     )
 
 
-config_data = get_config_data(path_file_config="config.ini")
-MODE = config_data.get("mode")
+config_data = get_config_data(
+    path_file_config=os.path.join("user", "config.ini")
+)
+
 USER_DELAY_SECONDS = float(config_data.get("user_delay_seconds"))
 BOT_DELAY_SECONDS = float(config_data.get("bot_delay_seconds"))
 SKIP_DELAY_SECONDS = float(config_data.get("skip_delay_seconds"))
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--orig")
-parser.add_argument("--dest")
+parser.add_argument("--orig", help="chat_id of origin channel/group")
+parser.add_argument("--dest", help="chat_id of destination channel/group")
+parser.add_argument(
+    "--mode",
+    choices=["user", "bot"],
+    help='"user" is slow. "bot" requires token_bot in credentials',
+)
+parser.add_argument(
+    "--new", type=int, choices=[1, 2], help="1 = new, 2 = resume"
+)
+help_type = """list separated by comma of message type to be clonned:
+Ex. for documents and videos: 3,8 || Options:
+0 = All files
+1 = Photos
+2 = Text
+3 = Documents (pdf, zip, rar...)
+4 = Stickers
+5 = Animation
+6 = Audio files (music
+7 = Voice message
+8 = Videos
+9 = Polls"""
+parser.add_argument("--type", help=help_type)
 options = parser.parse_args()
 
-if options.orig is None:
+NEW = options.new
 
+if options.orig is None:
     origin_chat = int(input("Enter the origin id_chat:"))
-    destination_chat = int(input("Enter the destination id_chat:"))
 else:
     origin_chat = int(options.orig)
-    destination_chat = int(options.dest)
     FILES_TYPE_EXCLUDED = []
+    if NEW is None:
+        NEW = 1
+    else:
+        NEW = int(NEW)
 
+if options.dest is None:
+    destination_chat = int(input("Enter the destination id_chat:"))
+else:
+    destination_chat = int(options.dest)
+if options.mode is None:
+    MODE = config_data.get("mode")
+else:
+    MODE = options.mode
+if options.type is None:
+    pass
+else:
+    TYPE = options.type
+    FILES_TYPE_EXCLUDED = get_files_type_excluded_by_input(TYPE)
 
 useraccount = pyrogram.Client(
     name="user",
