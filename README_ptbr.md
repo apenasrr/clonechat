@@ -21,9 +21,9 @@ Backup seguro. Guarda e protege as postagens no chat destino de eventual derruba
       - `api_hash = "sKwrdX7tb2xFDkPU9h0AsKwrdX7tb2xF"`
     - Os valores informados acima são apenas exemplos. Os valores são inválidos
     - Salve e feche o arquivo
-  - Se você desejar usar o clonechat em maior velocidade, gere um bot token e registre na flag bot_token
+  - Se você desejar usar o clonechat em maior velocidade, gere um bot token e registre na flag bot_token do arquivo de configuração em `user/config.ini`
 
-> Não sabe obter api_id, api_hash ou bot_token? Veja o tópico "Perguntas frequentes"
+> Não sabe obter api_id, api_hash ou bot_token? Veja o tópico ["Perguntas frequentes"](#perguntas-frequentes)
 
 ## USO
 
@@ -64,11 +64,16 @@ Comando: python clonechat.py --orig={chat_id do canal/grupo de origem} --dest=-{
 
 Exemplo: `python clonechat.py --orig=-100222222 --dest=-10011111111`
 
-### Finalização
+Caso queira fazer a clonagem via bot:
 
-- Ao terminar a clonagem, apague o arquivo `posted.json`.
+Exemplo: `python clonechat.py --orig=-100222222 --dest=-10011111111 --mode=bot`
 
-> Observação: Caso este arquivo não seja apagado, na próxima vez que executar o script via linha de comando a clonagem será continuada de onde parou.
+Caso queira continuar uma tarefa de clonagem ao invés de iniciar. Útil para atualizar um canal clonado ou retomar uma tarefa de clonagem interrompida anteriormente:
+
+Exemplo: `python clonechat.py --orig=-100222222 --dest=-10011111111 --new=2`
+
+Para verificar todos comendos de terminal:
+Comando: `python clonechat.py --help`
 
 ## Perguntas frequentes
 
@@ -83,8 +88,11 @@ Existem várias formas de obter o chat_id de um canal. Mostraremos duas delas:
   - Encaminhe qualquer postagem do canal para este bot
   - O bot responderá com o ID do remetente da mensagem. Neste caso, o ID do canal.
 - Copie o `chat_id` (incluindo o sinal de subtração).
-- Vale ressaltar que canais começam com o número '-100'. O kotatogram não informa o prefixo '-100', então você deve o digitar manualmente.
+
+Atenção:
+- Vale ressaltar que o Kotatogram não informa o início '-100' no chat_id. Mas todos os canais e grupos devem possuir o '-100' no início. Se for coletar o `chat_id` pelo kotatogaram, lembre de digitar manualmente o `-100` no início.
 > Exemplo de um código de canal: `-1001623956859`
+- Para coletar o `chat_id` de um grupo com o [@Find_TGIDbot](http://t.me/Find_TGIDbot) é mais trabalhoso, pois se você encaminhar a mensagem de um membro, o bot informará o ID do usuário e não o id do grupo. Assim, ou você deve encaminhar uma mensagem de um "ADM Anônimo" ou recomendamos usar o kotatogram para pegar o chat_id da tela de deescrição do canal.
 
 ### Como gerar credenciais de acesso a API do telegram?
 
@@ -110,9 +118,9 @@ Bot token é a credencial de acesso para controlar um bot de telegram.
 O encaminho de mensagens por bot é mais rápido. O telegram limita a permissão sobre volume de postagens de forma diferente entre a interface de usuário e a interface de bots. Para manter a segurança e ficar livre de punições do telegram, é recomendável que a conta do usuário não encaminhe mais que 6 mensagens por minuto. Já para bots, o limite sobe para 60 mensagens por minuto. Assim, o Clonechat opera 10 vezes mais rápido quando em `mode=bot`.
 
 O uso em modo bot possui algumas exigências:
-- No arquivo `config.ini`, a flag `mode` precisa ser alterada para `bot`
-- O bot precisa ser administrador do canal de origem
+- O bot precisa ser administrador do canal de origem e destino
 - Sua conta do telegram precisa fazer parte do canal de origem
+- Caso use a interface Menu, no arquivo `user/config.ini`, a flag `mode` precisa estar como `bot`
 
 ### Como gerar um bot token e ativar?
 

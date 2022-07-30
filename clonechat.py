@@ -5,12 +5,11 @@ import time
 from configparser import ConfigParser
 
 import pyrogram
-from pyrogram.errors import FloodWait
+from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid
 
 import credentials
 from setup import version
 
-CACHE_FILE = os.path.join("user", "posted.json")
 DELAY_AMOUNT = 10
 
 
@@ -446,12 +445,54 @@ def get_first_message_id(list_posted) -> int:
     return message_id
 
 
+def ensure_folder_existence(folder_path):
+    """If the folder does not exist, it creates
+
+    Args:
+        folder_path (str): folder path
+    """
+
+    if not os.path.exists(folder_path):
+        os.mkdir(folder_path)
+
+
+def get_task_file(ORIGIN_CHAT_TITLE, destination_chat):
+
+    ensure_folder_existence("user")
+    ensure_folder_existence(os.path.join("user", "tasks"))
+    task_file_name = f"{ORIGIN_CHAT_TITLE}-{destination_chat}.json"
+    task_file_path = os.path.join("user", "tasks", task_file_name)
+    return task_file_path
+
+
+def check_chat_id(chat_id):
+
+    try:
+        chat_obj = tg.get_chat(chat_id)
+        chat_title = chat_obj.title
+        return chat_title
+    except ChannelInvalid:  # When you are not part of the channel
+        print("\nNon-accessible chat")
+        if MODE == "bot":
+            print(
+                "\nCheck that the bot is part of the chat as an administrator."
+                + "It is necessary for bot mode."
+            )
+        else:
+            print("\nCheck that the user account is part of the chat.")
+        return False
+    except PeerIdInvalid:  # When the chat_id is invalid
+        print(f"\nInvalid chat_id: {chat_id}")
+        return False
+
+
 def main():
 
     print(
         f"\n....:: Clonechat - v{version} ::....\n"
         + "github.com/apenasrr/clonechat/\n"
     )
+
     global FILES_TYPE_EXCLUDED
     FILES_TYPE_EXCLUDED = get_files_type_excluded()
     last_message_id = get_last_message_id(origin_chat)
@@ -531,31 +572,10 @@ Ex. for documents and videos: 3,8 || Options:
 parser.add_argument("--type", help=help_type)
 options = parser.parse_args()
 
-NEW = options.new
-
-if options.orig is None:
-    origin_chat = int(input("Enter the origin id_chat:"))
-else:
-    origin_chat = int(options.orig)
-    FILES_TYPE_EXCLUDED = []
-    if NEW is None:
-        NEW = 1
-    else:
-        NEW = int(NEW)
-
-if options.dest is None:
-    destination_chat = int(input("Enter the destination id_chat:"))
-else:
-    destination_chat = int(options.dest)
 if options.mode is None:
     MODE = config_data.get("mode")
 else:
     MODE = options.mode
-if options.type is None:
-    pass
-else:
-    TYPE = options.type
-    FILES_TYPE_EXCLUDED = get_files_type_excluded_by_input(TYPE)
 
 useraccount = pyrogram.Client(
     name="user",
@@ -584,5 +604,44 @@ if MODE == "user":
     DELAY_AMOUNT = USER_DELAY_SECONDS
 
 DELAY_SKIP = SKIP_DELAY_SECONDS
+
+NEW = options.new
+
+if options.orig is None:  # Menu interface
+    while True:
+        origin_chat = int(input("Enter the origin id_chat:"))
+        ORIGIN_CHAT_TITLE = check_chat_id(origin_chat)
+        if ORIGIN_CHAT_TITLE:
+            break
+else:  # CLI interface
+    origin_chat = int(options.orig)
+    ORIGIN_CHAT_TITLE = check_chat_id(origin_chat)
+    if ORIGIN_CHAT_TITLE is False:
+        raise AttributeError("Fix the origin chat_id")
+    FILES_TYPE_EXCLUDED = []
+    if NEW is None:
+        NEW = 1
+    else:
+        NEW = int(NEW)
+
+if options.dest is None:  # Menu interface
+    while True:
+        destination_chat = int(input("Enter the destination id_chat:"))
+        DESTINATION_CHAT_TITLE = check_chat_id(origin_chat)
+        if DESTINATION_CHAT_TITLE:
+            break
+else:  # CLI interface
+    destination_chat = int(options.dest)
+    DESTINATION_CHAT_TITLE = check_chat_id(origin_chat)
+    if DESTINATION_CHAT_TITLE is False:
+        raise AttributeError("Fix the destination chat_id")
+
+if options.type is None:
+    pass
+else:
+    TYPE = options.type
+    FILES_TYPE_EXCLUDED = get_files_type_excluded_by_input(TYPE)
+
+CACHE_FILE = get_task_file(ORIGIN_CHAT_TITLE, destination_chat)
 
 main()
