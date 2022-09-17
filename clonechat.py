@@ -8,7 +8,6 @@ from pathlib import Path
 import pyrogram
 from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid
 
-import credentials
 from setup import version
 
 DELAY_AMOUNT = 10
@@ -25,17 +24,6 @@ def get_config_data(path_file_config):
     config_file.read(path_file_config)
     default_config = dict(config_file["default"])
     return default_config
-
-
-def check_bot_token():
-
-    if hasattr(credentials, "bot_token"):
-        pass
-    else:
-        raise AttributeError(
-            "bot_token not found in credentials.py. "
-            + "Fill a token_bot ou change the mode to 'user'."
-        )
 
 
 def foward_photo(message, destination_chat):
