@@ -3,6 +3,7 @@ import json
 import os
 import time
 from configparser import ConfigParser
+from pathlib import Path
 
 import pyrogram
 from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid
@@ -486,6 +487,56 @@ def check_chat_id(chat_id):
         return False
 
 
+def ensure_connection(client_name):
+
+    if client_name == "user":
+        if Path(f"{client_name}.session").exists():
+            try:
+                useraccount = pyrogram.Client(client_name)
+                useraccount.start()
+                return useraccount
+            except:
+                print("Delete Session file and try again.")
+
+        while True:
+            try:
+                api_id = int(input("Enter your api_id: "))
+                api_hash = input("Enter your api_hash: ")
+
+                useraccount = pyrogram.Client("user", api_id, api_hash)
+                useraccount.start()
+                return useraccount
+            except:
+                print("\nError. Try again.\n")
+                pass
+    else:
+        pass
+
+    if client_name == "bot":
+        if Path(f"{client_name}.session").exists():
+            try:
+                bot = pyrogram.Client(client_name)
+                bot.start()
+                return bot
+            except:
+                print("Delete Session file and try again.")
+
+        while True:
+            try:
+                api_id = int(input("Enter your api_id: "))
+                api_hash = input("Enter your api_hash: ")
+                bot_token = input("Enter your bot_token: ")
+
+                bot = pyrogram.Client(
+                    client_name, api_id, api_hash, bot_token=bot_token
+                )
+                bot.start()
+                return bot
+            except:
+                print("\nError. Try again.\n")
+                pass
+
+
 def main():
 
     print(
@@ -577,25 +628,11 @@ if options.mode is None:
 else:
     MODE = options.mode
 
-useraccount = pyrogram.Client(
-    name="user",
-    api_id=credentials.api_id,
-    api_hash=credentials.api_hash,
-    no_updates=True,
-)
-useraccount.start()
 
+useraccount = ensure_connection("user")
+print(f"{MODE=}")
 if MODE == "bot":
-
-    check_bot_token()
-    bot = pyrogram.Client(
-        "bot",
-        bot_token=credentials.bot_token,
-        api_id=credentials.api_id,
-        api_hash=credentials.api_hash,
-    )
-
-    bot.start()
+    bot = ensure_connection("bot")
     tg = bot
     DELAY_AMOUNT = BOT_DELAY_SECONDS
 
