@@ -11,16 +11,7 @@ Backup seguro. Guarda e protege as postagens no chat destino de eventual derruba
   - Instale. No form 'Advanced Options', marque `Add python 3.?? to PATH`
 - Atualize as dependências
   - Execute o arquivo `update_libs.bat` para atualizar as dependências
-  - Se aparecer a mensagem
-- Cadastre suas credenciais
-  - Abra o bloco de notas ou qualquer editor de texto
-  - Arraste o arquivo `credentials.py` para dentro do editor
-    - Registre suas credenciais de acesso a API (api_id e api_hash) do telegram
-    - Exemplo de preenchimento:
-      - `api_id = 1111111`
-      - `api_hash = "sKwrdX7tb2xFDkPU9h0AsKwrdX7tb2xF"`
-    - Os valores informados acima são apenas exemplos. Os valores são inválidos
-    - Salve e feche o arquivo
+  - Se aparecer uma mensagem falando sobre pip desatualizado, execute novamente o arquivo de update após executar o seguinte comando no terminal: `python -m pip install --upgrade pip`
   - Se você desejar usar o clonechat em maior velocidade, gere um bot token e registre na flag bot_token do arquivo de configuração em `user/config.ini`
 
 > Não sabe obter api_id, api_hash ou bot_token? Veja o tópico ["Perguntas frequentes"](#perguntas-frequentes)
@@ -28,6 +19,8 @@ Backup seguro. Guarda e protege as postagens no chat destino de eventual derruba
 ## USO
 
 ### Opção 1: Via menu em terminal
+
+Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat.
 
 - Execute o arquivo `exec_clonechat.bat`
 - Digite o chat_id do canal/grupo de origem. Se o `ctrl+v` não funcionar, clique com o botão direito do mouse no terminal
@@ -51,6 +44,7 @@ Backup seguro. Guarda e protege as postagens no chat destino de eventual derruba
   - Na mensagem perguntando se o número está correto, digite `y`.
   - Será enviado um código para seu telegram, que você deve digitar no terminal.
   - Por fim, se você tiver 'segurança de 2 fatores' (2fa) ativado na sua conta, será solicitado sua senha.
+  - Ao executar o `exec_clonechat.bat`, será solicitado seu api_id e api_hash. Você só precisa os informar uma vez, pois as demais conexões serão realizadas por um arquivo de sessão que será criado na pasta do clonechat.
 
 Aguarde a clonagem terminar!
 
@@ -133,3 +127,15 @@ Geração:
 
 Ativação:
 - Cadastre o bot_token na flag bot_token do arquivo `credentials.py`. Remova o '#' no início da linha.
+
+### Dá pra usar o clonechat sem ter python instalado?
+
+Existe uma versão independente do clonechat desenvolvida por outra pessoa com implementação online, que pode ser executado por um pc ou celular, sem precisar instalar nada.
+
+Acesse: [https://github.com/Drrivao/Clonechat-Telegram-Colab-v3](https://github.com/Drrivao/Clonechat-Telegram-Colab-v3)
+
+### Entendi nada... Tem tutorial mais detalhado?
+
+Tutorial desenvolvido pelo usuário Polar:
+
+Acesse: [https://upolar.github.io/clonechats-docs/](https://upolar.github.io/clonechats-docs/)
