@@ -5,6 +5,16 @@ Clona todas as postagens de um Canal/Grupo do telegram para um outro Canal/Grupo
 
 Backup seguro. Guarda e protege as postagens no chat destino de eventual derrubada de postagens no chat de origem.
 
+## Quer clonar sem instalar nada?**
+
+Experimente a versão via colab, criada por outra pessoa:
+
+[https://github.com/Drrivao/Clonechat-Telegram-Colab](https://github.com/Drrivao/Clonechat-Telegram-Colab)
+
+## Quer clonar numa instância própria?
+
+**Continue a leitura**
+
 ## Configuração
 - Instale o Python
   - Acesse o site python.org e [baixe](https://www.python.org/downloads/) a versão estável mais nova
@@ -136,6 +146,5 @@ Acesse: [https://github.com/Drrivao/Clonechat-Telegram-Colab-v3](https://github.
 
 ### Entendi nada... Tem tutorial mais detalhado?
 
-Tutorial desenvolvido pelo usuário Polar:
-
-Acesse: [https://upolar.github.io/clonechats-docs/](https://upolar.github.io/clonechats-docs/)
+Tutorial do Polar: [https://upolar.github.io/clonechats-docs/](https://upolar.github.io/clonechats-docs/)
+Versão via notebook: [https://github.com/Drrivao/Clonechat-Telegram-Colab](https://github.com/Drrivao/Clonechat-Telegram-Colab)
