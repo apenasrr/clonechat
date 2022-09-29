@@ -5,7 +5,6 @@ import time
 
 from configparser import ConfigParser
 from pathlib import Path
-from typing import Union
 
 import pyrogram
 from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid, UsernameInvalid
@@ -653,10 +652,12 @@ if options.orig is None:  # Menu interface
             ORIGIN_CHAT_TITLE = chat_origin_obj.title
             break
 else:  # CLI interface
-    origin_chat = int(options.orig)
-    ORIGIN_CHAT_TITLE = check_chat_id(origin_chat)
-    if ORIGIN_CHAT_TITLE is False:
+    origin_chat = options.orig
+    chat_origin_obj = check_chat_id(origin_chat)
+    if chat_origin_obj is False:
         raise AttributeError("Fix the origin chat_id")
+    ORIGIN_CHAT_TITLE = chat_origin_obj.title
+    origin_chat = chat_origin_obj.id
     FILES_TYPE_EXCLUDED = []
     if NEW is None:
         NEW = 1
@@ -668,13 +669,14 @@ if options.dest is None:  # Menu interface
         destination_chat = input("Enter the destination id_chat: ")
         chat_destination_obj = check_chat_id(destination_chat)
         if chat_destination_obj:
+            destination_chat = chat_destination_obj.id
             break
 else:  # CLI interface
-    destination_chat = int(options.dest)
+    destination_chat = options.dest
     chat_destination_obj = check_chat_id(destination_chat)
     if chat_destination_obj is False:
         raise AttributeError("Fix the destination chat_id")
-
+    destination_chat = chat_destination_obj.id
 if options.type is None:
     pass
 else:
