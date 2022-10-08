@@ -138,6 +138,14 @@ Geração:
 Ativação:
 - Cadastre o bot_token na flag bot_token do arquivo `credentials.py`. Remova o '#' no início da linha.
 
+### O que é blank_id que aparece no terminal enquanto to clonando?
+
+Isto não é um problema. ID é um código de identificação de postagem. Blank_id significa que o post vinculado aquele ID, não existe mais no canal. Por não existir, você sequer o enxerga no canal.
+
+Imagine que um canal após ter sido criado fez 3 postagens e apagou as 2 primeiras. Você só verá 1 postagem no canal. Mas ao tentar clonar, aparecerá a mensagem de blank_id para o id 1 e para o id 2, até que a clonagem do post de id 3 é executado com sucesso.
+
+Dessa forma, tudo o que estava visível no canal foi clonado, onde o clonechat foi apenas mais informativo, te informando no terminal haviam 2 mensagens que foram deletadas no passado.
+
 ### Dá pra usar o clonechat sem ter python instalado?
 
 Existe uma versão independente do clonechat desenvolvida por outra pessoa com implementação online, que pode ser executado por um pc ou celular, sem precisar instalar nada.
