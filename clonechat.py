@@ -383,20 +383,18 @@ def update_cache(CACHE_FILE, list_posted):
     with open(CACHE_FILE, mode="w") as file:
         file.write(json.dumps(list_posted))
 
-
-def get_last_message_id(origin_chat):
-
-    iter_message = useraccount.get_chat_history(origin_chat)
-    message = next(iter_message)
-    return message.id
-
 def get_valid_ids(origin_chat):
 
+    global chat_ids,last_message_id
+
     chat_ids=[]
+    print('Getting messages...')
     his=useraccount.get_chat_history(origin_chat)
     for message in his:chat_ids.append(message.id)
+    last_message_id=chat_ids[0]
     chat_ids.sort()
-    return chat_ids
+
+    return last_message_id,chat_ids
 
 def get_files_type_excluded():
 
@@ -486,7 +484,9 @@ def ensure_connection(client_name):
     if client_name == "user":
         if Path(f"{client_name}.session").exists():
             try:
-                useraccount = pyrogram.Client(client_name)
+                useraccount = pyrogram.Client(
+                    client_name,takeout=True
+                )
                 useraccount.start()
                 return useraccount
             except:
@@ -540,8 +540,7 @@ def main():
 
     global FILES_TYPE_EXCLUDED
     FILES_TYPE_EXCLUDED = get_files_type_excluded()
-    last_message_id = get_last_message_id(origin_chat)
-    chat_ids=get_valid_ids(origin_chat)
+    get_valid_ids(origin_chat)
     
     global NEW
     if NEW is None:
