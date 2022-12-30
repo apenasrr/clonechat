@@ -26,8 +26,21 @@ Experimente a versão via colab, criada por outra pessoa:
 
 > Não sabe obter api_id, api_hash ou bot_token? Veja o tópico ["Perguntas frequentes"](#perguntas-frequentes)
 
+## Download
+
+Para baixar o clonechat no seu PC:
+- [acesse seu repositório](https://github.com/apenasrr/clonechat/)
+- Clique no botão verde "**<> Code**"
+- Finalize clicando em "Download ZIP"
+- Extraia o conteúdo numa nova pasta vazia
+
 ## USO
 
+Primeiro uma dica para sua segurança.
+
+É recomendado encaminhar no máximo 1.000 posts por dia, não alterando as configurações de velocidade no encaminhamento. Estes limites servem para o telegram não classificar sua conta como praticante de abuso e acabar aplicando punição e levando até ao banimento da conta. Se você quer se manter seguro, clone no máximo 1.000 posts por dia e não mexa nas configurações de velocidade (delay) de clonagem.
+
+Agora vamos as opções de uso. :)
 ### Opção 1: Via menu em terminal
 
 Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat.
@@ -151,6 +164,19 @@ Dessa forma, tudo o que estava visível no canal foi clonado, onde o clonechat f
 Existe uma versão independente do clonechat desenvolvida por outra pessoa com implementação online, que pode ser executado por um pc ou celular, sem precisar instalar nada.
 
 Acesse: [https://github.com/Drrivao/Clonechat-Telegram-Colab](https://github.com/Drrivao/Clonechat-Telegram-Colab)
+
+
+### Posso clonar 2 canais diferentes ao mesmo tempo abrindo outro clonechat?
+
+Não é recomendado pois o telegram pode banir sua conta. O telegram classifica excesso de requisição no uso de sua API como abuso por flood e aplica punição em quem faz isso. O clonechat é configurado para encaminhar mensagens a cada 10 segundos e assim “se comportar” para não ser classificado como flood. Se alguém copia o clone chat em várias pastas diferentes e clona vários canais ao mesmo tempo, o número de requisições enviadas pela mesma conta se multiplicará por 2, 3, 4... Isso eventualmente resultará num banimento da conta por excesso de requisição.
+
+### Existe forma segura de clonar 2 canais ao mesmo tempo?
+
+É possível clonar 2 canais diferentes ao mesmo tempo de forma segura. Para isso tem que usar 2 contas diferentes do telegram. O login de cada conta deve ser realizado numa pasta diferente do clonechat. Para isso,  é preciso fazer uma cópia da pasta do clonechat e nesta nova pasta se certificar que não existe o arquivo `user.session` , pois ele representa o login. Daí é só usar o clonechat dessa nova pasta com uma conta secundária. Não tente usar 2 instâncias do clonechat com a mesma conta do telegram, pois você corre risco de ser banido do telegram por excesso de requisição (flood).
+
+### Apareceu o erro "400 CHAT_FORWARDS_RESTRICTED" quando tentei usar. Como resolver?
+
+O erro `[400 CHAT_FORWARDS_RESTRICTED] - The chat restricts forwarding content (caused by "messages.SendMedia")` é causado por o chat de origem estar configurado com restrição ao encaminhamento de conteúdo. No momento, o clonechat (v109) não é capaz de clonar um canal com essa proteção. Senta e chora. 🙁
 
 ### Entendi nada... Tem tutorial mais detalhado?
 
