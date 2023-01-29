@@ -11,6 +11,8 @@ from typing import Union
 import pyrogram
 from pyrogram.errors import ChannelInvalid, PeerIdInvalid
 
+from setup import version
+
 from . import cloneplan
 from .pipe import download, upload
 
@@ -334,6 +336,11 @@ def show_history_overview(history_path: Path) -> list[str]:
 
 async def main():
 
+    print(
+        f"\n....:: Clonechat - v{version} ::....\n"
+        + "github.com/apenasrr/clonechat/\n"
+        + "-----------Protect------------"
+    )
     config_path = Path(".").absolute() / "user" / "config.ini"
     config_data = get_config_data(path_file_config=config_path)
 
