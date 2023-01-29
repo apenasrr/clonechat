@@ -5,6 +5,11 @@ Clona todas as postagens de um Canal/Grupo do telegram para um outro Canal/Grupo
 
 Backup seguro. Guarda e protege as postagens no chat destino de eventual derrubada de postagens no chat de origem.
 
+Para clonagem padrão, use o executável `exec_clonechat.bat`.
+
+Para clonar canal de conteúdo protegido, use o `exec_clonechat_protect.bat`.
+
+Para apenas fazer download de todo o canal, use o `exec_downloadall.bat`.
 ## Quer clonar sem instalar nada?
 
 Experimente a versão via colab, criada por outra pessoa:
