@@ -4,11 +4,12 @@ import argparse
 import json
 import os
 import time
+
 from configparser import ConfigParser
 from pathlib import Path
 
 import pyrogram
-from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid
+from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid, UsernameInvalid
 
 from setup import version
 
@@ -458,10 +459,15 @@ def get_task_file(ORIGIN_CHAT_TITLE, destination_chat):
 
 def check_chat_id(chat_id):
 
-    try:
+    try: 
+        try:
+            chat_id = int(chat_id)
+        except ValueError:
+            pass
+
         chat_obj = tg.get_chat(chat_id)
-        chat_title = chat_obj.title
-        return chat_title
+
+        return chat_obj
     except ChannelInvalid:  # When you are not part of the channel
         print("\nNon-accessible chat")
         if MODE == "bot":
@@ -472,10 +478,16 @@ def check_chat_id(chat_id):
         else:
             print("\nCheck that the user account is part of the chat.")
         return False
+    except KeyError:
+        print(f"\nID not found: {chat_id}")
+        return False
     except PeerIdInvalid:  # When the chat_id is invalid
         print(f"\nInvalid chat_id: {chat_id}")
         return False
+    except UsernameInvalid:
 
+        print(f"\nInvalid username: {chat_id}")
+        return False
 
 def ensure_connection(client_name):
 
@@ -633,18 +645,21 @@ if MODE == "user":
 DELAY_SKIP = SKIP_DELAY_SECONDS
 
 NEW = options.new
-
 if options.orig is None:  # Menu interface
     while True:
-        origin_chat = int(input("Enter the origin id_chat:"))
-        ORIGIN_CHAT_TITLE = check_chat_id(origin_chat)
-        if ORIGIN_CHAT_TITLE:
+        origin_chat = input("Enter the origin id_chat:")
+        chat_origin_obj = check_chat_id(origin_chat)
+        if chat_origin_obj:
+            origin_chat = chat_origin_obj.id
+            ORIGIN_CHAT_TITLE = chat_origin_obj.title
             break
 else:  # CLI interface
-    origin_chat = int(options.orig)
-    ORIGIN_CHAT_TITLE = check_chat_id(origin_chat)
-    if ORIGIN_CHAT_TITLE is False:
+    origin_chat = options.orig
+    chat_origin_obj = check_chat_id(origin_chat)
+    if chat_origin_obj is False:
         raise AttributeError("Fix the origin chat_id")
+    ORIGIN_CHAT_TITLE = chat_origin_obj.title
+    origin_chat = chat_origin_obj.id
     FILES_TYPE_EXCLUDED = []
     if NEW is None:
         NEW = 1
@@ -653,16 +668,17 @@ else:  # CLI interface
 
 if options.dest is None:  # Menu interface
     while True:
-        destination_chat = int(input("Enter the destination id_chat:"))
-        DESTINATION_CHAT_TITLE = check_chat_id(origin_chat)
-        if DESTINATION_CHAT_TITLE:
+        destination_chat = input("Enter the destination id_chat: ")
+        chat_destination_obj = check_chat_id(destination_chat)
+        if chat_destination_obj:
+            destination_chat = chat_destination_obj.id
             break
 else:  # CLI interface
-    destination_chat = int(options.dest)
-    DESTINATION_CHAT_TITLE = check_chat_id(origin_chat)
-    if DESTINATION_CHAT_TITLE is False:
+    destination_chat = options.dest
+    chat_destination_obj = check_chat_id(destination_chat)
+    if chat_destination_obj is False:
         raise AttributeError("Fix the destination chat_id")
-
+    destination_chat = chat_destination_obj.id
 if options.type is None:
     pass
 else:
