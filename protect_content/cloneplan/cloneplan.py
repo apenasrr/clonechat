@@ -44,7 +44,7 @@ def enrich_fields(cloneplan_dict, msg, key):
     if key == "video":
         cloneplan_dict["duration"] = msg["video"]["duration"]
         cloneplan_dict["file_size"] = msg["video"]["file_size"]
-        cloneplan_dict["file_name"] = msg["video"].get("file_name", (str(msg["id"]) + '-' + msg["video"]["file_unique_id"] + '.' + (
+        cloneplan_dict["file_name"] = msg["video"].get("file_name", (msg["video"]["file_unique_id"] + (
             ".mp4" if msg["video"]["mime_type"] == 'video/mp4' else '.mov' if msg["video"]["mime_type"] == 'video/quicktime' else '.mkv')))
         return cloneplan_dict
     if key == "document":
