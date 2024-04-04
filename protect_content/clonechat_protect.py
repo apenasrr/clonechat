@@ -302,6 +302,7 @@ def show_history_overview(history_path: Path) -> list[str]:
     def get_msg_type_count(list_type, list_msgs):
 
         counter_type = {}
+        found = None
         for msg in list_msgs:
             if isinstance(msg, str):
                 msg = json.loads(msg)
