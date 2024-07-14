@@ -5,29 +5,51 @@ Clona todas as postagens de um Canal/Grupo do telegram para um outro Canal/Grupo
 
 Backup seguro. Guarda e protege as postagens no chat destino de eventual derrubada de postagens no chat de origem.
 
-Para clonagem padrão, use o executável `exec_clonechat.bat`.
+**O que é clonar uma postagem e porque isso é importante?**
 
-Para clonar canal de conteúdo protegido, use o `exec_clonechat_protect.bat`.
+Clonar uma postagem é encaminhar uma mensagem de um chat para outro enquanto se remove o remetente original. Isso é importante pois protege a mensagem encaminhada caso o canal de origem da mensagem seja excluído ou até derrubado internamente pelo telegram. Ao clonar uma mensagem, a versão clonada se torna independente de sua origem. Assim ao clonar um canal inteiro para um canal pessoal seu, você terá uma cópia segura **sem risco** de "sumir" misteriosamente algum dia.
 
-Para apenas fazer download de todo o canal, use o `exec_downloadall.bat`.
-## Quer clonar sem instalar nada?
+**Talvez você não precise do Clonechat, sabia?**
 
-Experimente a versão via colab, criada por outra pessoa:
+Se você deseja clonar apenas 1 ou poucos canais, use o aplicativo **64gram** que será mais rápido e fácil para clonar grupos e canais. Ele é uma versão modificada do telegram desktop muito popular e que possui várias funções extras, incluindo obter o ID de qualquer chat (canal ou grupo) e usuário. Além disso, tem a função de clonar conjuntos de até 100 postagens por vez.
 
-[https://github.com/Drrivao/Clonechat-Telegram-Colab](https://github.com/Drrivao/Clonechat-Telegram-Colab)
+[Acesse o link](https://github.com/TDesktop-x64/tdesktop/releases) e baixe a versão "x64.zip" mais recente do 64gram.
+Após baixar, instale e abra o aplicativo. Faça login com sua conta do telegram e siga as instruções para clonar o canal desejado:
+- Crie um canal novo para receber os posts clonados
+- Vá no canal que você deseja clonar
+- Selecione os posts, clique com o botão direito em um deles, clique em "Forward selected w/o quote"
+- Agora selecione o canal ou grupo criado para ser o destino da clonagem e clicar em "Send".
 
-## Quer clonar numa instância própria?
+**E quando o Clonechat é vale a pena ser usado?**
 
-**Continue a leitura**
+Em duas situações:
+- Quando o canal que você deseja clonar, está com "conteúdo protegido", impedindo que se encaminhe mensagens.
+- Ou quando você deseja clonar muitos canais, ou canais com milhares de postagens, sendo assim interessante automatizar o processo.
+
+Se essa for sua situação, o CloneChat pode te ajudar. 😁
+
+**Funções**
+
+- Clonar as postagens de um canal/grupo para outro canal/grupo. Use o `exec_clonechat.bat`
+- Clonar as postagens de um canal/grupo com **conteúdo protegido** (mas é bem lento). Use `exec_clonechat_protect_dw.bat` e `exec_clonechat_protect_up.bat`
+- Baixar TODOS os arquivos de um canal (fotos, vídeos, áudios, documentos, etc) e salva em ordem de postagem. Use `exec_downloadall.bat`
+
 
 ## Configuração
 - Instale o Python
   - Acesse o site python.org e [baixe](https://www.python.org/downloads/) a versão estável mais nova
-  - Instale. No form 'Advanced Options', marque `Add python 3.?? to PATH`
-- Atualize as dependências
-  - Execute o arquivo `update_libs.bat` para atualizar as dependências
-  - Se aparecer uma mensagem falando sobre pip desatualizado, execute novamente o arquivo de update após executar o seguinte comando no terminal: `python -m pip install --upgrade pip`
-  - Se você desejar usar o clonechat em maior velocidade, gere um bot token e registre na flag bot_token do arquivo de configuração em `user/config.ini`
+  - Instale. No form "Advanced Options", marque `Add python 3.?? to PATH`
+- Será que funcionou? Teste:
+  - Abra um terminal e digite `python --version`
+    - Se aparecer a versão do python, está tudo certo
+    - Se não aparecer. Peça ajuda com humildade e educação no grupo do telegram que está ao final deste tutorial.
+  - Abra um terminal e digite `where pip`
+  - Se aparecer o caminho do gerenciador de pacote pip, está tudo certo.
+  - Se não aparecer, chore por 1 minuto 😭. Agora vá na seção de ["Perguntas frequentes"](#perguntas-frequentes) e procure por "Instalar o PIP".
+- Crie o ambiente virtual e instale as dependências
+  - Execute o arquivo `install.bat`
+  - No futuro, se o clonechat gerar muitos erros, execute o arquivo `update_libs.bat` para atualizar as dependências.
+
 
 > Não sabe obter api_id, api_hash ou bot_token? Veja o tópico ["Perguntas frequentes"](#perguntas-frequentes)
 
@@ -46,17 +68,23 @@ Primeiro uma dica para sua segurança.
 É recomendado encaminhar no máximo 1.000 posts por dia, não alterando as configurações de velocidade no encaminhamento. Estes limites servem para o telegram não classificar sua conta como praticante de abuso e acabar aplicando punição e levando até ao banimento da conta. Se você quer se manter seguro, clone no máximo 1.000 posts por dia e não mexa nas configurações de velocidade (delay) de clonagem.
 
 Agora vamos as opções de uso. :)
-### Opção 1: Via menu em terminal
+
+Se for a primeira vez que você está usando o clonechat, é preciso instalar um ambiente virtual.
+- Execute o arquivo `install.bat`
+
+> Deu erro? No final do tutorial tem uma seção de perguntas frequentes que pode te ajudar. Também existe um tutorial alternativo mais detalhado. E até um grupo cheio de pessoas que podem tirar dúvidas 😁
+
+### Clonar canal/grupo que aceita encaminhamento
 
 Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat.
 
 - Execute o arquivo `exec_clonechat.bat`
-- Digite o chat_id do canal/grupo de origem. Se o `ctrl+v` não funcionar, clique com o botão direito do mouse no terminal
+- Digite o chat_id, link de convite ou username do canal/grupo de origem. Se o `ctrl+v` não funcionar, clique com o botão direito do mouse no terminal
 - Confirme com [ENTER]
-- Digite o chat_id do canal/grupo de destino
+- Digite o chat_id, link de convite ou username do canal/grupo de destino
 - Confirme com [ENTER]
 - No menu de escolha de tipos de arquivos
-  - Digite uma opção de filtro de arquivos
+  - Digite uma opção de filtro, de arquivos
   - Se quiser clonar todos os arquivos, digite zero
   - Você pode selecionar múltiplas opções as separando com vírgulas. Ex.: `1,3` para clonar apenas fotos e documentos.
 - Informe se deseja iniciar uma nova clonagem ou continuar uma clonagem iniciada anteriormente
@@ -71,14 +99,26 @@ Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat
     - Exemplo: Para telefone de São Paulo, com ddd 11, deverá ser digitado algo como: `+5511995429405`
   - Na mensagem perguntando se o número está correto, digite `y`.
   - Será enviado um código para seu telegram, que você deve digitar no terminal.
-  - Por fim, se você tiver 'segurança de 2 fatores' (2fa) ativado na sua conta, será solicitado sua senha.
+  - Por fim, se você tiver "segurança de 2 fatores" (2fa) ativado na sua conta, será solicitado sua senha.
   - Ao executar o `exec_clonechat.bat`, será solicitado seu api_id e api_hash. Você só precisa os informar uma vez, pois as demais conexões serão realizadas por um arquivo de sessão que será criado na pasta do clonechat.
 
 Aguarde a clonagem terminar!
 
-> Importante: Clonagem via usuário (mode=user) possui uma pausa de 10 segundos entre posts. Já clonagem via bot (mode=bot) é mais rápido, possuindo uma pausa de apenas 1 segundo entre posts.
+> Importante: Clonagem via usuário (mode=user) possui uma pausa de 10 segundos entre posts. Já clonagem via bot (mode=bot) é mais rápido, possuindo uma pausa de apenas 1 segundo entre posts. Se você desejar usar o clonechat em maior velocidade, gere um bot token e mude flag "mode" de "user" para "bot" no arquivo de configuração em `user/config.ini`. Este modo funciona apenas para clonagem de canal que você é dono e pode por seu bot pessoal como administrador.
 
-### Opção 2: via linha de comando
+### Clonar canal/grupo com conteúdo protegido
+
+Um Canal/Grupo tem conteúdo protegido quando você **não consegue** encaminhar mensagens dele.
+
+Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat.
+
+- Execute o arquivo `exec_clonechat_protect_dw.bat` e também o `exec_clonechat_protect_up.bat`
+
+> *Por que precisa executar os 2? Por que um vai baixando as postagens da origem enquanto o outro vai enviando as postagens pro destino. Trabalham juntos.*
+
+- O passo a passo para o uso de cada um dos dois scripts é bem parecido com o que foi descrito no tópico anterior. Apenas siga as instruções do terminal.
+
+### Opção 2: via linha de comando (desatualizado)
 
 > Abra o terminal do windows na pasta do clone chat e digite:
 
@@ -99,20 +139,34 @@ Comando: `python clonechat.py --help`
 
 ## Perguntas frequentes
 
+### Instalar o PIP
+
+PIP é um gerenciador de pacotes do python. Normalmente ele já vem instalado com o python. Para verificar se você tem o pip instalado, abra um terminal e digite `where pip`. Se aparecer o caminho do pip, está tudo certo.
+Se não aparecer, você pode instalar o pip com:
+- o comando `python -m ensurepip`.
+- Se não funcionar, abra o terminal como administrador.
+- Execute o comando: `curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py`
+- Em seguida, digite: `python get-pip.py`
+- Feche o terminal. Abra novamente, digite `where pip`.
+- Se aparecer o caminho do pip, está tudo certo.
+- Se não aparecer, pede ajuda pelo link do grupo do telegram que está ao final deste tutorial.
+
 ### Como conseguir o chat_id de um canal ou grupo
 
 Existem várias formas de obter o chat_id de um canal. Mostraremos duas delas:
-- Usando o telegram client [Kotatogram](https://kotatogram.github.io/download/):
+- Usando o telegram client [64gram](https://github.com/TDesktop-x64/tdesktop/releases):
   - Acesse a tela de descrição do canal
   - Copie o `chat_id` que aparece abaixo do nome do canal
-- Usando bot Find_TGIDbot:
-  - Acesse e inicie bot [@Find_TGIDbot](http://t.me/Find_TGIDbot) ou [@myidbot](http://t.me/myidbot)
+- Opção 2 - Existe um bot que informa chat_id de canal, mas não de grupo.
+  - Acesse e inicie bot [@myidbot](http://t.me/myidbot)
   - Encaminhe qualquer postagem do canal para este bot
   - O bot responderá com o ID do remetente da mensagem. Neste caso, o ID do canal.
-- Copie o `chat_id` (incluindo o sinal de subtração).
+  - Copie o `chat_id` (incluindo o sinal de subtração).
+  - Atenção: Se você encaminhar mensagem de um grupo ao invés de canal, o bot vai informar o user_id da pessoa que escreveu a mensagem. Então não é útil para ser usado no clonechat.
+- Opção 3 - Pede pra um amigo que tem 64gram 😅
 
 Atenção:
-- Vale ressaltar que o Kotatogram não informa o início '-100' no chat_id. Mas todos os canais e grupos devem possuir o '-100' no início. Se for coletar o `chat_id` pelo kotatogaram, lembre de digitar manualmente o `-100` no início.
+- Vale ressaltar que o Kotatogram não informa o início "-100" no chat_id. Mas todos os canais e grupos devem possuir o "-100" no início. Se for coletar o `chat_id` pelo kotatogaram, lembre de digitar manualmente o `-100` no início.
 > Exemplo de um código de canal: `-1001623956859`
 - Para coletar o `chat_id` de um grupo com o [@Find_TGIDbot](http://t.me/Find_TGIDbot) é mais trabalhoso, pois se você encaminhar a mensagem de um membro, o bot informará o ID do usuário e não o id do grupo. Assim, ou você deve encaminhar uma mensagem de um "ADM Anônimo" ou recomendamos usar o kotatogram para pegar o chat_id da tela de deescrição do canal.
 
@@ -131,6 +185,7 @@ Atenção:
     - URL: ignore
     - Plataforma: Ignore. Pode deixar marcado o padrão Android.
     - Finalize o formulário e aparecerá seus códigos de `api_id` e `api_hash`
+    - Salve em um local seguro e **não compartilhe com ninguém**. Estes códigos são como senha de acesso a sua conta do telegram.
   - Para assistir o processo em detalhes, assista [este vídeo](https://www.youtube.com/watch?v=8naENmP3rg4) que exemplifica tudo rapidamente.
 
 ### O que é bot token e por que usar?
@@ -153,8 +208,7 @@ Geração:
 - Insira um username. O username obrigatoriamente tem que terminar com a palavra bot. Ex: eusouumbot, tambemsouum_bot.
 - Feito isso, você receberá o código bot_token.
 
-Ativação:
-- Cadastre o bot_token na flag bot_token do arquivo `credentials.py`. Remova o '#' no início da linha.
+Salve o bot_token em um local seguro.
 
 ### O que é blank_id que aparece no terminal enquanto to clonando?
 
@@ -185,9 +239,7 @@ O erro `[400 CHAT_FORWARDS_RESTRICTED] - The chat restricts forwarding content (
 
 ### Entendi nada... Tem tutorial mais detalhado?
 
-Tutorial do Polar: [https://upolar.github.io/clonechats-docs/](https://upolar.github.io/clonechats-docs/)
-
-Versão via notebook: [https://github.com/Drrivao/Clonechat-Telegram-Colab](https://github.com/Drrivao/Clonechat-Telegram-Colab)
+Tutorial alternativo: [Guia wandrey7](https://wandrey7.github.io/guiaclonechat/)
 
 ### Ainda tenho dúvidas... Alguém pode me ajudar?
 
