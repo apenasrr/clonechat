@@ -1,1 +1,1 @@
-from . import clonechat_protect, cloneplan, utils, downloadall
+from . import clonechat_protect_down, clonechat_protect_up, cloneplan, utils, downloadall

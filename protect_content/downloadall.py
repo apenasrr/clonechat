@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-import asyncio
 from pathlib import Path
 
 from setup import version
 
-from . import clonechat_protect, cloneplan
+from . import clonechat_protect_down, cloneplan
 from .pipe import download
 
 
-async def main():
+def main():
 
     print(
         f"\n....:: Clonechat - v{version} ::....\n"
@@ -18,12 +17,12 @@ async def main():
     )
 
     session_folder = Path(".").absolute()
-    client = await clonechat_protect.get_client(
+    client = clonechat_protect_down.get_client(
         "user", session_folder=session_folder
     )
 
     message = "Enter the ORIGIN chat_id, chat_link or chat_username: "
-    chat_origin_info = await clonechat_protect.get_chat_info_until(
+    chat_origin_info = clonechat_protect_down.get_chat_info_until(
         client, message
     )
     chat_origin_title = chat_origin_info["chat_title"]
@@ -33,29 +32,29 @@ async def main():
     # cloneplan_path
     folder_path_cloneplan = Path("protect_content") / "log_cloneplan"
     folder_path_cloneplan.mkdir(exist_ok=True)
-    cloneplan_path = clonechat_protect.get_cloneplan_path(
+    cloneplan_path = clonechat_protect_down.get_cloneplan_path(
         folder_path_cloneplan, chat_origin_id, chat_origin_title
     )
 
     new_clone = True
     if cloneplan_path.exists():
-        new_clone = clonechat_protect.ask_for_new_clone()
+        new_clone = clonechat_protect_down.ask_for_new_clone()
 
     if new_clone:
-        history_path = clonechat_protect.get_history_path(
+        history_path = clonechat_protect_down.get_history_path(
             chat_origin_title, chat_origin_id
         )
-        await clonechat_protect.save_history(
+        clonechat_protect_down.save_history(
             client, chat_origin_id, history_path
         )
 
         cloneplan.save_cloneplan(history_path, cloneplan_path)
     else:
-        history_path = clonechat_protect.get_recent_history(
+        history_path = clonechat_protect_down.get_recent_history(
             chat_origin_title, chat_origin_id
         )
 
-    clonechat_protect.show_history_overview(history_path)
+    clonechat_protect_down.show_history_overview(history_path)
 
     # download_folder
     cache_folder = Path("protect_content") / "Cache"
@@ -65,7 +64,7 @@ async def main():
     )
     download_folder.mkdir(exist_ok=True)
 
-    await download.pipe_download(
+    download.pipe_download(
         client,
         chat_origin_id,
         cloneplan_path,
@@ -75,4 +74,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
