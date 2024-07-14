@@ -1,2 +1,2 @@
-pyrogram
+pyrofork
 tgcrypto
