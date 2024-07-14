@@ -209,7 +209,7 @@ def pipe_download(
     while message_id != 0:
         message_id = get_next_to_download(cloneplan_path)
         if message_id == 0:
-            print("-- Everything was done download :)")
+            print("-- Download done")
             return
         # Identifies the type of post
         list_data = open_csv(cloneplan_path)

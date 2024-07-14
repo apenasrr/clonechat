@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import sys
 from configparser import ConfigParser
@@ -14,7 +15,7 @@ from pyrogram.errors import ChannelInvalid, PeerIdInvalid
 from setup import version
 
 from . import cloneplan
-from .pipe import download
+from .pipe import download, upload
 
 
 def get_config_data(path_file_config: Path):
@@ -168,7 +169,6 @@ def get_history_path(chat_title: str, chat_id: int) -> Path:
 
 def save_history(client: pyrogram.Client, chat_id: int, history_path: Path):
 
-    print(f"\nHold on... Mapping message history in: {str(history_path)}")
     # save history json
     list_dict_msgs = []
     iter_message = client.get_chat_history(chat_id)
@@ -196,16 +196,43 @@ def pipe_clone(
     max_size_mb: int,
     auto_restart: int,
 ):
-    # deletar def
 
-    download.pipe_download(
-        client,
-        chat_id_orig,
+    upload.pipe_upload(
+        up_client_name,
+        up_session_folder,
+        chat_id_dest,
         cloneplan_path,
-        download_folder,
-        max_size_mb,
+        history_path,
+        auto_restart,
     )
 
+    # loop = asyncio.get_event_loop()
+    # list_tasks = list()
+    # list_tasks.append(
+    #     loop.create_task(
+    #         download.pipe_download(
+    #             client,
+    #             chat_id_orig,
+    #             cloneplan_path,
+    #             download_folder,
+    #             max_size_mb,
+    #         )
+    #     )
+    # )
+    # list_tasks.append(
+    #     loop.create_task(
+    #         upload.pipe_upload(
+    #             up_client_name,
+    #             up_session_folder,
+    #             chat_id_dest,
+    #             cloneplan_path,
+    #             history_path,
+    #             auto_restart,
+    #         )
+    #     )
+    # )
+
+    # asyncio.gather(*list_tasks)
     print("\nChat Cloned. Done!")
 
 
@@ -214,6 +241,12 @@ def get_recent_history(chat_title: str, chat_id: int) -> Path:
     log_chats_path = Path("protect_content") / "log_chats"
     log_chats_path.mkdir(exist_ok=True)
     folder_chat = log_chats_path / f"{str(abs(chat_id))}-{str(chat_title)}"
+    if not folder_chat.is_dir():
+        print("Chat history not found. Waiting history...")
+        while not folder_chat.is_dir():
+            sleep(5)
+            folder_chat.is_dir()
+
     recent_history = list(folder_chat.iterdir())[-1]
     return recent_history
 
@@ -256,7 +289,7 @@ def show_history_overview(history_path: Path) -> list[str]:
     def get_chat_data_metrics(list_msgs):
         total_video_duration = 0
         total_size = 0
-        for _, msg in enumerate(list_msgs):
+        for index, msg in enumerate(list_msgs):
             # if index == 100:
             #     break
             if isinstance(msg, str):
@@ -298,11 +331,7 @@ def show_history_overview(history_path: Path) -> list[str]:
                         counter_type[key] += 1
                     break
             if not found:
-                print(
-                    msg["id"],
-                    "unidentified message type",
-                    " ".join(msg.keys()),
-                )
+                print(msg["id"], " ".join(msg.keys()))
                 found = False
         return counter_type
 
@@ -324,19 +353,30 @@ def main():
     print(
         f"\n....:: Clonechat - v{version} ::....\n"
         + "github.com/apenasrr/clonechat/\n"
-        + "-----------Protect Dw---------"
+        + "-----------Protect UP---------"
     )
     config_path = Path(".").absolute() / "user" / "config.ini"
     config_data = get_config_data(path_file_config=config_path)
 
     session_folder = Path(".").absolute()
-    client = get_client("user", session_folder=session_folder)
+    # client = get_client("user", session_folder=session_folder)
+
+    up_client_name = "user_up"
+    # test_connection for upload client
+    client_up = get_client(up_client_name, session_folder=session_folder)
+    # client_up.stop()
 
     message = "Enter the ORIGIN chat_id, chat_link or chat_username: "
-    chat_origin_info = get_chat_info_until(client, message)
+    chat_origin_info = get_chat_info_until(client_up, message)
     chat_origin_title = chat_origin_info["chat_title"]
     chat_origin_id = chat_origin_info["chat_id"]
-    print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
+    # print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
+
+    message = "Enter the DESTINATION chat_id or chat_link or chat_username: "
+    chat_dest_info = get_chat_info_until(client_up, message)
+    chat_dest_title = chat_dest_info["chat_title"]
+    chat_dest_id = chat_dest_info["chat_id"]
+    print(f"DESTINATION: {abs(chat_dest_id)}-{chat_dest_title}\n")
 
     # cloneplan_path
     folder_path_cloneplan = Path("protect_content") / "log_cloneplan"
@@ -345,17 +385,21 @@ def main():
         folder_path_cloneplan, chat_origin_id, chat_origin_title
     )
 
-    new_clone = True
-    if cloneplan_path.exists():
-        new_clone = ask_for_new_clone()
+    # new_clone = True
+    # if cloneplan_path.exists():
+    #     new_clone = ask_for_new_clone()
 
-    if new_clone:
-        history_path = get_history_path(chat_origin_title, chat_origin_id)
-        save_history(client, chat_origin_id, history_path)
+    # if new_clone:
+    #     history_path = get_history_path(chat_origin_title, chat_origin_id)
+    #     save_history(client, chat_origin_id, history_path)
 
-        cloneplan.save_cloneplan(history_path, cloneplan_path)
-    else:
-        history_path = get_recent_history(chat_origin_title, chat_origin_id)
+    #     cloneplan.save_cloneplan(history_path, cloneplan_path)
+    # else:
+    #     history_path = get_recent_history(chat_origin_title, chat_origin_id)
+
+    history_path = get_recent_history(chat_origin_title, chat_origin_id)
+
+    # history_path = get_recent_history(chat_origin_title, chat_origin_id)
 
     show_history_overview(history_path)
 
@@ -367,16 +411,15 @@ def main():
     )
     download_folder.mkdir(exist_ok=True)
 
-    cache_folder_max_size_mb = int(
-        config_data.get("cache_folder_max_size_mb", 6000)
-    )
+    auto_restart = int(config_data.get("auto_restart_min", 20))
 
-    download.pipe_download(
-        client,
-        chat_origin_id,
+    upload.pipe_upload(
+        up_client_name,
+        session_folder,
+        chat_dest_id,
         cloneplan_path,
-        download_folder,
-        cache_folder_max_size_mb,
+        history_path,
+        auto_restart,
     )
 
 
