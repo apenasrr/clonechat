@@ -34,6 +34,9 @@ Se essa for sua situação, o CloneChat pode te ajudar. 😁
 - Clonar as postagens de um canal/grupo com **conteúdo protegido** (mas é bem lento). Use `exec_clonechat_protect_dw.bat` e `exec_clonechat_protect_up.bat`
 - Baixar TODOS os arquivos de um canal (fotos, vídeos, áudios, documentos, etc) e salva em ordem de postagem. Use `exec_downloadall.bat`
 
+**Problemas conhecidos**
+- No clonechat_protect, sem usar conta premium do telegram, ao tentar clonar uma postagem com texto muito longo ou arquivos com mais de 2000 MiB, vai resultar em erro. Isso ocorre porque postagem com essas características só podem ser criadas por uma conta premium do telegram. No futuro a situação será contornada com uma postagem particionada do texto ou documento.
+- Grupo habilitado para fórum não é suportado pelo Clonechat. Ainda...
 
 ## Configuração
 - Instale o Python
