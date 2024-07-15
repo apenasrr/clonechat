@@ -156,22 +156,29 @@ Se não aparecer, você pode instalar o pip com:
 
 ### Como conseguir o chat_id de um canal ou grupo
 
-Existem várias formas de obter o chat_id de um canal. Mostraremos duas delas:
+Existem várias formas de obter o chat_id de um canal. Mostraremos algumas delas:
 - Usando o telegram client [64gram](https://github.com/TDesktop-x64/tdesktop/releases):
   - Acesse a tela de descrição do canal
   - Copie o `chat_id` que aparece abaixo do nome do canal
-- Opção 2 - Existe um bot que informa chat_id de canal, mas não de grupo.
+- Opção 2 - Através do link de postagem
+  - Clique com o botão direito numa postagem do canal ou grupo que deseja clonar.
+  - Cole num editor de texto.
+  - Remove o texto `https://t.me/c/` do início.
+  - Remova a barra e número que aparecer ao final. Exemplo: de `2031251722/1612` para `2031251722`. Esse número ao final representa o ID da mensagem, que não é útil
+- Opção 3 - Através de um bot que informa chat_id de canal, mas não de grupo.
   - Acesse e inicie bot [@myidbot](http://t.me/myidbot)
   - Encaminhe qualquer postagem do canal para este bot
   - O bot responderá com o ID do remetente da mensagem. Neste caso, o ID do canal.
   - Copie o `chat_id` (incluindo o sinal de subtração).
-  - Atenção: Se você encaminhar mensagem de um grupo ao invés de canal, o bot vai informar o user_id da pessoa que escreveu a mensagem. Então não é útil para ser usado no clonechat.
-- Opção 3 - Pede pra um amigo que tem 64gram 😅
+  - *Atenção:* Se você encaminhar mensagem de um grupo ao invés de canal, o bot vai informar o user_id da pessoa que escreveu a mensagem. Então não é útil para ser usado no clonechat.
+  - Prévia: O link `https://t.me/c/2031251722/1612` se tornou `2031251722`.
+  - Agora adicione o prefixo `-100` ao número. Exemplo: `2031251722` se torna `-1002031251722`. Esse é o chat_id do canal ou grupo.
+- Opção 4 -  Pede pra um amigo que tem 64gram 😅
 
-Atenção:
-- Vale ressaltar que o Kotatogram não informa o início "-100" no chat_id. Mas todos os canais e grupos devem possuir o "-100" no início. Se for coletar o `chat_id` pelo kotatogaram, lembre de digitar manualmente o `-100` no início.
-> Exemplo de um código de canal: `-1001623956859`
-- Para coletar o `chat_id` de um grupo com o [@Find_TGIDbot](http://t.me/Find_TGIDbot) é mais trabalhoso, pois se você encaminhar a mensagem de um membro, o bot informará o ID do usuário e não o id do grupo. Assim, ou você deve encaminhar uma mensagem de um "ADM Anônimo" ou recomendamos usar o kotatogram para pegar o chat_id da tela de deescrição do canal.
+### Qual a diferença de "Grupo" e "Canal" no telegram?
+
+- Grupo: Qualquer pessoa pode entrar e participar. O administrador pode definir quem pode enviar mensagens e quem não pode.
+- Canal: É uma plataforma de transmissão. Apenas o administrador pode enviar mensagens. Os membros do canal não podem enviar mensagens.
 
 ### Como gerar credenciais de acesso a API do telegram?
 
