@@ -20,7 +20,7 @@ Após baixar, instale e abra o aplicativo. Faça login com sua conta do telegram
 - Selecione os posts, clique com o botão direito em um deles, clique em "Forward selected w/o quote"
 - Agora selecione o canal ou grupo criado para ser o destino da clonagem e clicar em "Send".
 
-**E quando o Clonechat é vale a pena ser usado?**
+**E quando o Clonechat vale a pena ser usado?**
 
 Em duas situações:
 - Quando o canal que você deseja clonar, está com "conteúdo protegido", impedindo que se encaminhe mensagens.
@@ -36,7 +36,7 @@ Se essa for sua situação, o CloneChat pode te ajudar. 😁
 
 **Problemas conhecidos**
 - No clonechat_protect, sem usar conta premium do telegram, ao tentar clonar uma postagem com texto muito longo ou arquivos com mais de 2000 MiB, vai resultar em erro. Isso ocorre porque postagem com essas características só podem ser criadas por uma conta premium do telegram. No futuro a situação será contornada com uma postagem particionada do texto ou documento.
-- Grupo habilitado para fórum não é suportado pelo Clonechat. Ainda...
+- Grupo habilitado com "tópicos" não é suportado pelo Clonechat. Ainda...
 
 ## Configuração
 - Instale o Python
@@ -47,8 +47,8 @@ Se essa for sua situação, o CloneChat pode te ajudar. 😁
     - Se aparecer a versão do python, está tudo certo
     - Se não aparecer. Peça ajuda com humildade e educação no grupo do telegram que está ao final deste tutorial.
   - Abra um terminal e digite `where pip`
-  - Se aparecer o caminho do gerenciador de pacote pip, está tudo certo.
-  - Se não aparecer, chore por 1 minuto 😭. Agora vá na seção de ["Perguntas frequentes"](#perguntas-frequentes) e procure por "Instalar o PIP".
+    - Se aparecer o caminho do gerenciador de pacote pip, está tudo certo.
+    - Se não aparecer, chore por 1 minuto 😭. Agora vá na seção de ["Perguntas frequentes"](#perguntas-frequentes) e procure por "Instalar o PIP".
 - Crie o ambiente virtual e instale as dependências
   - Execute o arquivo `install.bat`
   - No futuro, se o clonechat gerar muitos erros, execute o arquivo `update_libs.bat` para atualizar as dependências.
@@ -152,7 +152,7 @@ Se não aparecer, você pode instalar o pip com:
 - Em seguida, digite: `python get-pip.py`
 - Feche o terminal. Abra novamente, digite `where pip`.
 - Se aparecer o caminho do pip, está tudo certo.
-- Se não aparecer, pede ajuda pelo link do grupo do telegram que está ao final deste tutorial.
+- Se não aparecer, peça ajuda pelo link do grupo do telegram que está ao final deste tutorial.
 
 ### Como conseguir o chat_id de um canal ou grupo
 
@@ -165,14 +165,14 @@ Existem várias formas de obter o chat_id de um canal. Mostraremos algumas delas
   - Cole num editor de texto.
   - Remove o texto `https://t.me/c/` do início.
   - Remova a barra e número que aparecer ao final. Exemplo: de `2031251722/1612` para `2031251722`. Esse número ao final representa o ID da mensagem, que não é útil
+  - Prévia: O link `https://t.me/c/2031251722/1612` se tornou `2031251722`.
+  - Agora adicione o prefixo `-100` ao número. Exemplo: `2031251722` se torna `-1002031251722`. Esse é o chat_id do canal ou grupo.
 - Opção 3 - Através de um bot que informa chat_id de canal, mas não de grupo.
   - Acesse e inicie bot [@myidbot](http://t.me/myidbot)
   - Encaminhe qualquer postagem do canal para este bot
   - O bot responderá com o ID do remetente da mensagem. Neste caso, o ID do canal.
   - Copie o `chat_id` (incluindo o sinal de subtração).
   - *Atenção:* Se você encaminhar mensagem de um grupo ao invés de canal, o bot vai informar o user_id da pessoa que escreveu a mensagem. Então não é útil para ser usado no clonechat.
-  - Prévia: O link `https://t.me/c/2031251722/1612` se tornou `2031251722`.
-  - Agora adicione o prefixo `-100` ao número. Exemplo: `2031251722` se torna `-1002031251722`. Esse é o chat_id do canal ou grupo.
 - Opção 4 -  Pede pra um amigo que tem 64gram 😅
 
 ### Qual a diferença de "Grupo" e "Canal" no telegram?
@@ -245,7 +245,7 @@ Não é recomendado pois o telegram pode banir sua conta. O telegram classifica 
 
 ### Apareceu o erro "400 CHAT_FORWARDS_RESTRICTED" quando tentei usar. Como resolver?
 
-O erro `[400 CHAT_FORWARDS_RESTRICTED] - The chat restricts forwarding content (caused by "messages.SendMedia")` é causado por o chat de origem estar configurado com restrição ao encaminhamento de conteúdo. No momento, o clonechat (v109) não é capaz de clonar um canal com essa proteção. Senta e chora. 🙁
+O erro `[400 CHAT_FORWARDS_RESTRICTED] - The chat restricts forwarding content (caused by "messages.SendMedia")` é causado por o chat de origem estar configurado com restrição ao encaminhamento de conteúdo. Mas isso não é problema! O clonechat possui uma função específica para essa situação. Leia as instruções no tópico "Clonar canal/grupo com conteúdo protegido".
 
 ### Entendi nada... Tem tutorial mais detalhado?
 
