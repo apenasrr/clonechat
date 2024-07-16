@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import asyncio
 import json
 import sys
 from configparser import ConfigParser
@@ -14,8 +13,8 @@ from pyrogram.errors import ChannelInvalid, PeerIdInvalid
 
 from setup import version
 
-from . import cloneplan
-from .pipe import download, upload
+from .pipe import upload
+from .utils import parser
 
 
 def get_config_data(path_file_config: Path):
@@ -359,22 +358,19 @@ def main():
     config_data = get_config_data(path_file_config=config_path)
 
     session_folder = Path(".").absolute()
-    # client = get_client("user", session_folder=session_folder)
 
     up_client_name = "user_up"
     # test_connection for upload client
     client_up = get_client(up_client_name, session_folder=session_folder)
-    # client_up.stop()
 
     message = "Enter the ORIGIN chat_id, chat_link or chat_username: "
     chat_origin_info = get_chat_info_until(client_up, message)
     chat_origin_title = chat_origin_info["chat_title"]
     chat_origin_id = chat_origin_info["chat_id"]
-    # print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
 
     message = "Enter the DESTINATION chat_id or chat_link or chat_username: "
     chat_dest_info = get_chat_info_until(client_up, message)
-    chat_dest_title = chat_dest_info["chat_title"]
+    chat_origin_title = parser.sanitize_string(chat_origin_info["chat_title"])
     chat_dest_id = chat_dest_info["chat_id"]
     print(f"DESTINATION: {abs(chat_dest_id)}-{chat_dest_title}\n")
 
@@ -385,21 +381,7 @@ def main():
         folder_path_cloneplan, chat_origin_id, chat_origin_title
     )
 
-    # new_clone = True
-    # if cloneplan_path.exists():
-    #     new_clone = ask_for_new_clone()
-
-    # if new_clone:
-    #     history_path = get_history_path(chat_origin_title, chat_origin_id)
-    #     save_history(client, chat_origin_id, history_path)
-
-    #     cloneplan.save_cloneplan(history_path, cloneplan_path)
-    # else:
-    #     history_path = get_recent_history(chat_origin_title, chat_origin_id)
-
     history_path = get_recent_history(chat_origin_title, chat_origin_id)
-
-    # history_path = get_recent_history(chat_origin_title, chat_origin_id)
 
     show_history_overview(history_path)
 

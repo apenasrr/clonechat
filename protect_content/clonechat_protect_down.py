@@ -15,6 +15,7 @@ from setup import version
 
 from . import cloneplan
 from .pipe import download
+from .utils import parser
 
 
 def get_config_data(path_file_config: Path):
@@ -334,7 +335,7 @@ def main():
 
     message = "Enter the ORIGIN chat_id, chat_link or chat_username: "
     chat_origin_info = get_chat_info_until(client, message)
-    chat_origin_title = chat_origin_info["chat_title"]
+    chat_origin_title = parser.sanitize_string(chat_origin_info["chat_title"])
     chat_origin_id = chat_origin_info["chat_id"]
     print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
 
