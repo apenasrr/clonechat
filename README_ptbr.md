@@ -13,7 +13,7 @@ Clonar uma postagem é encaminhar uma mensagem de um chat para outro enquanto se
 
 Se você deseja clonar apenas 1 ou poucos canais, use o aplicativo **64gram** que será mais rápido e fácil para clonar grupos e canais. Ele é uma versão modificada do telegram desktop muito popular e que possui várias funções extras, incluindo obter o ID de qualquer chat (canal ou grupo) e usuário. Além disso, tem a função de clonar conjuntos de até 100 postagens por vez.
 
-[Acesse o link](https://github.com/TDesktop-x64/tdesktop/releases) e baixe a versão "x64.zip" mais recente do 64gram.
+[Acesse o github](https://github.com/TDesktop-x64/tdesktop/releases) ou o [canal do telegram](http://t.me/tg_x64) e baixe a versão "x64.zip" mais recente do 64gram.
 Após baixar, instale e abra o aplicativo. Faça login com sua conta do telegram e siga as instruções para clonar o canal desejado:
 - Crie um canal novo para receber os posts clonados
 - Vá no canal que você deseja clonar
@@ -161,7 +161,7 @@ Existem várias formas de obter o chat_id de um canal. Mostraremos algumas delas
   - Acesse a tela de descrição do canal
   - Copie o `chat_id` que aparece abaixo do nome do canal
 - Opção 2 - Através do link de postagem
-  - Clique com o botão direito numa postagem do canal ou grupo que deseja clonar.
+  - Clique com o botão direito numa postagem do canal ou grupo que deseja clonar e clique em "Copiar link".
   - Cole num editor de texto.
   - Remove o texto `https://t.me/c/` do início.
   - Remova a barra e número que aparecer ao final. Exemplo: de `2031251722/1612` para `2031251722`. Esse número ao final representa o ID da mensagem, que não é útil
