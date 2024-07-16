@@ -1,5 +1,8 @@
 # ReleaseNotes
 
+**v113 2024-07-15**
+- Fix: Chats com título contendo caracteres especiais são geral mais erro no sistema de arquivos
+
 **v112 2024-07-14**
 
 - Refact: clonechat_protect com esteira de download separada da esteira de upload
