@@ -39,7 +39,8 @@ def get_client(
 
     Args:
         client_name (str): session file name
-        session_folder (Path, optional): Folder where the session file should be. Defaults to Path(".").
+        session_folder (Path, optional): Folder where the session file should
+            be. Defaults to Path(".").
 
     Returns:
         pyrogram.Client: pyrogram client
@@ -295,7 +296,8 @@ def show_history_overview(history_path: Path) -> list[str]:
     data_metrics = get_chat_data_metrics(list_msgs)
     print(f"\nChat History: {history_path.parent.name}")
     print(
-        f"duration: {data_metrics['hours']}h {data_metrics['minutes']}m {data_metrics['seconds']}s"
+        f"duration: {data_metrics['hours']}h {data_metrics['minutes']}m "
+        + f"{data_metrics['seconds']}s"
     )
     print(f"total size: {(data_metrics['total_size'] / 1024**3):.3f} GB")
     counter_type = get_msg_type_count(list_type, list_msgs)
