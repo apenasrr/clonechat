@@ -82,7 +82,9 @@ def get_chat_info(
     client: pyrogram.Client, chat_input: Union[int, str]
 ) -> Union[dict, bool]:
     """Returns the chat_info (chat_id, chat_title) if chat_input is valid.
-     Returns false if it is invalid.
+        Returns false if it is invalid.
+    Valid chat_input: messsage_link, chat_id, invite link, chat_link,
+        chat_username
 
     Args:
         client (pyrogram.Client): started pyrogram client
@@ -93,6 +95,12 @@ def get_chat_info(
             {chat_id, chat_title}
             or False if chat_input invalid
     """
+
+    base_link = "https://t.me/c/"
+    if base_link in str(chat_input):
+        # if chat_input is a message link, convert to chat_id
+        base_chat_id = str(chat_input.split(base_link)[1].split("/")[0])
+        chat_input = "-100" + base_chat_id
 
     try:
         chat_obj = client.get_chat(chat_input)
@@ -180,59 +188,7 @@ def save_history(client: pyrogram.Client, chat_id: int, history_path: Path):
             list_dict_msgs, open(history_path, "w", encoding="utf-8"), indent=2
         )
 
-    print(f"The chat history was saved. {len(list_dict_msgs)} posts.")
-
-
-def pipe_clone(
-    client: pyrogram.Client,
-    up_client_name: str,
-    up_session_folder: Path,
-    chat_id_orig: int,
-    chat_id_dest: int,
-    cloneplan_path: Path,
-    history_path: Path,
-    download_folder: Path,
-    max_size_mb: int,
-    auto_restart: int,
-):
-
-    upload.pipe_upload(
-        up_client_name,
-        up_session_folder,
-        chat_id_dest,
-        cloneplan_path,
-        history_path,
-        auto_restart,
-    )
-
-    # loop = asyncio.get_event_loop()
-    # list_tasks = list()
-    # list_tasks.append(
-    #     loop.create_task(
-    #         download.pipe_download(
-    #             client,
-    #             chat_id_orig,
-    #             cloneplan_path,
-    #             download_folder,
-    #             max_size_mb,
-    #         )
-    #     )
-    # )
-    # list_tasks.append(
-    #     loop.create_task(
-    #         upload.pipe_upload(
-    #             up_client_name,
-    #             up_session_folder,
-    #             chat_id_dest,
-    #             cloneplan_path,
-    #             history_path,
-    #             auto_restart,
-    #         )
-    #     )
-    # )
-
-    # asyncio.gather(*list_tasks)
-    print("\nChat Cloned. Done!")
+    print(f"The chat history was saved. {len(list_dict_msgs)} messages.")
 
 
 def get_recent_history(chat_title: str, chat_id: int) -> Path:
@@ -363,14 +319,19 @@ def main():
     # test_connection for upload client
     client_up = get_client(up_client_name, session_folder=session_folder)
 
-    message = "Enter the ORIGIN chat_id, chat_link or chat_username: "
+    message = (
+        "Enter the ORIGIN message_link, chat_id, chat_link or chat_username: "
+    )
     chat_origin_info = get_chat_info_until(client_up, message)
     chat_origin_title = chat_origin_info["chat_title"]
     chat_origin_id = chat_origin_info["chat_id"]
 
-    message = "Enter the DESTINATION chat_id or chat_link or chat_username: "
+    message = (
+        "Enter the DESTINATION "
+        + "message_link, chat_id or chat_link or chat_username: "
+    )
     chat_dest_info = get_chat_info_until(client_up, message)
-    chat_origin_title = parser.sanitize_string(chat_origin_info["chat_title"])
+    chat_dest_title = parser.sanitize_string(chat_origin_info["chat_title"])
     chat_dest_id = chat_dest_info["chat_id"]
     print(f"DESTINATION: {abs(chat_dest_id)}-{chat_dest_title}\n")
 
