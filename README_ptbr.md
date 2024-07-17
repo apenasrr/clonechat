@@ -37,6 +37,7 @@ Se essa for sua situação, o CloneChat pode te ajudar. 😁
 **Problemas conhecidos**
 - No clonechat_protect, sem usar conta premium do telegram, ao tentar clonar uma postagem com texto muito longo ou arquivos com mais de 2000 MiB, vai resultar em erro. Isso ocorre porque postagem com essas características só podem ser criadas por uma conta premium do telegram. No futuro a situação será contornada com uma postagem particionada do texto ou documento.
 - Grupo habilitado com "tópicos" não é suportado pelo Clonechat. Ainda...
+- Vídeos clonados perdem a thumbnail.
 
 ## Configuração
 - Instale o Python
@@ -119,7 +120,10 @@ Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat
 
 > *Por que precisa executar os 2? Por que um vai baixando as postagens da origem enquanto o outro vai enviando as postagens pro destino. Trabalham juntos.*
 
-- O passo a passo para o uso de cada um dos dois scripts é bem parecido com o que foi descrito no tópico anterior. Apenas siga as instruções do terminal.
+O passo a passo para o uso de cada um dos dois scripts é bem parecido com o que foi descrito no tópico anterior. Apenas siga as instruções do terminal.
+
+Mas tem um diferencial legal: Nestes scripts de clonechat_protect, a identificação do canal de origem e destino pode ser feita por um **link de mensagem** do canal. Para obter o link de uma mensagem, clique com o botão direito sobre a mensagem e selecione "Copiar link". Em seguida cole o link no terminal quando for solicitado.
+
 
 ### Opção 2: via linha de comando (desatualizado)
 

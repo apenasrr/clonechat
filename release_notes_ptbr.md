@@ -1,5 +1,8 @@
 # ReleaseNotes
 
+**v114 2024-07-15**
+- Feat: clonechat_protect aceita identificação de canal ou grupo por link de mensagem
+
 **v113 2024-07-15**
 - Fix: Chats com título contendo caracteres especiais não geram mais erro no sistema de arquivos
 
