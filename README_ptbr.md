@@ -251,6 +251,10 @@ Não é recomendado pois o telegram pode banir sua conta. O telegram classifica 
 
 O erro `[400 CHAT_FORWARDS_RESTRICTED] - The chat restricts forwarding content (caused by "messages.SendMedia")` é causado por o chat de origem estar configurado com restrição ao encaminhamento de conteúdo. Mas isso não é problema! O clonechat possui uma função específica para essa situação. Leia as instruções no tópico "Clonar canal/grupo com conteúdo protegido".
 
+### Apareceu o erro "Failed building wheel for tgcrypto"
+
+O erro é causado por falta da instalação do "Microsoft Visual C++" da versão 14 ou superior. Para resolver, acesse o site da Microsoft e baixe o [visual-cpp-build-tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/). Durante a instalação, marque a opção "Desenvolvimento para desktop com C++". Após a instalação, execute o arquivo `update_libs.bat` para atualizar as dependências.
+
 ### Entendi nada... Tem tutorial mais detalhado?
 
 Tutorial alternativo: [Guia wandrey7](https://wandrey7.github.io/guiaclonechat/)
