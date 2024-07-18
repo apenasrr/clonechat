@@ -6,6 +6,7 @@ from setup import version
 
 from . import clonechat_protect_down, cloneplan
 from .pipe import download
+from .utils import parser
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
     chat_origin_info = clonechat_protect_down.get_chat_info_until(
         client, message
     )
-    chat_origin_title = chat_origin_info["chat_title"]
+    chat_origin_title = parser.sanitize_string(chat_origin_info["chat_title"])
     chat_origin_id = chat_origin_info["chat_id"]
     print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
 

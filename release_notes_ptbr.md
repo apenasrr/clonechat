@@ -2,6 +2,7 @@
 
 **v115 2024-07-18**
 - Fix: clonechat_protect_up não encontrava arquivo de histórico do chat
+- Fix: DownloadAll gerando NotADirectoryError em chats com título contendo caracteres especiais
 
 **v114 2024-07-16**
 - Feat: clonechat_protect aceita identificação de canal ou grupo por link de mensagem
