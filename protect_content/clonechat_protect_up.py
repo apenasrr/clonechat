@@ -196,14 +196,17 @@ def get_recent_history(chat_title: str, chat_id: int) -> Path:
 
     log_chats_path = Path("protect_content") / "log_chats"
     log_chats_path.mkdir(exist_ok=True)
-    folder_chat = log_chats_path / f"{str(abs(chat_id))}-{str(chat_title)}"
-    if not folder_chat.is_dir():
-        print("Chat history not found. Waiting history...")
-        while not folder_chat.is_dir():
+    chat_history_name = f"{str(abs(chat_id))}-{str(chat_title)}"
+    chat_history_path = log_chats_path / chat_history_name
+    if not chat_history_path.is_dir():
+        print(
+            chat_history_name, "\nChat history not found. Waiting history..."
+        )
+        while not chat_history_path.is_dir():
             sleep(5)
-            folder_chat.is_dir()
+            chat_history_path.is_dir()
 
-    recent_history = list(folder_chat.iterdir())[-1]
+    recent_history = list(chat_history_path.iterdir())[-1]
     return recent_history
 
 
@@ -325,15 +328,16 @@ def main():
         "Enter the ORIGIN message_link, chat_id, chat_link or chat_username: "
     )
     chat_origin_info = get_chat_info_until(client_up, message)
-    chat_origin_title = chat_origin_info["chat_title"]
+    chat_origin_title = parser.sanitize_string(chat_origin_info["chat_title"])
     chat_origin_id = chat_origin_info["chat_id"]
+    print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
 
     message = (
         "Enter the DESTINATION "
         + "message_link, chat_id or chat_link or chat_username: "
     )
     chat_dest_info = get_chat_info_until(client_up, message)
-    chat_dest_title = parser.sanitize_string(chat_origin_info["chat_title"])
+    chat_dest_title = parser.sanitize_string(chat_dest_info["chat_title"])
     chat_dest_id = chat_dest_info["chat_id"]
     print(f"DESTINATION: {abs(chat_dest_id)}-{chat_dest_title}\n")
 
