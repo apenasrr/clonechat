@@ -1,6 +1,9 @@
 # ReleaseNotes
 
-**v114 2024-07-15**
+**v115 2024-07-18**
+- Fix: clonechat_protect_up não encontrava arquivo de histórico do chat
+
+**v114 2024-07-16**
 - Feat: clonechat_protect aceita identificação de canal ou grupo por link de mensagem
 
 **v113 2024-07-15**
