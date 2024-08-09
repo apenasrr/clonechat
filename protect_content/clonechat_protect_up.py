@@ -294,7 +294,19 @@ def show_history_overview(history_path: Path) -> list[str]:
                 found = False
         return counter_type
 
-    list_msgs = json.load(open(history_path, encoding="utf-8"))
+    first_try = True
+    while True:
+        try:
+            with open(history_path, encoding="utf-8") as file:
+                list_msgs = json.load(file)
+            break
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            if first_try:
+                print(
+                    f"{e}\n\nHold on... Awaiting the history file be saved..."
+                )
+                first_try = False
+            sleep(5)
     list_type = msgs_types()
     data_metrics = get_chat_data_metrics(list_msgs)
     print(f"\nChat History: {history_path.parent.name}")
