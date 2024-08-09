@@ -28,13 +28,14 @@ Em duas situações:
 
 Se essa for sua situação, o CloneChat pode te ajudar. 😁
 
-**Funções**
+## Funções
 
 - Clonar as postagens de um canal/grupo para outro canal/grupo. Use o `exec_clonechat.bat`
 - Clonar as postagens de um canal/grupo com **conteúdo protegido** (mas é bem lento). Use `exec_clonechat_protect_dw.bat` e `exec_clonechat_protect_up.bat`
 - Baixar TODOS os arquivos de um canal (fotos, vídeos, áudios, documentos, etc) e salva em ordem de postagem. Use `exec_downloadall.bat`
 
-**Problemas conhecidos**
+## Problemas conhecidos
+
 - No clonechat_protect, sem usar conta premium do telegram, ao tentar clonar uma postagem com texto muito longo ou arquivos com mais de 2000 MiB, vai resultar em erro. Isso ocorre porque postagem com essas características só podem ser criadas por uma conta premium do telegram. No futuro a situação será contornada com uma postagem particionada do texto ou documento.
 - Grupo habilitado com "tópicos" não é suportado pelo Clonechat. Ainda...
 - Vídeos clonados perdem a thumbnail.
@@ -49,7 +50,7 @@ Se essa for sua situação, o CloneChat pode te ajudar. 😁
     - Se não aparecer. Peça ajuda com humildade e educação no grupo do telegram que está ao final deste tutorial.
   - Abra um terminal e digite `where pip`
     - Se aparecer o caminho do gerenciador de pacote pip, está tudo certo.
-    - Se não aparecer, chore por 1 minuto 😭. Agora vá na seção de ["Perguntas frequentes"](#perguntas-frequentes) e procure por "Instalar o PIP".
+    - Se não aparecer, chore por 1 minuto 😭. Agora vá na seção de ["Perguntas frequentes"](#perguntas-frequentes) e procure por "Como instalar o PIP".
 - Crie o ambiente virtual e instale as dependências
   - Execute o arquivo `install.bat`
   - No futuro, se o clonechat gerar muitos erros, execute o arquivo `update_libs.bat` para atualizar as dependências.
@@ -108,7 +109,7 @@ Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat
 
 Aguarde a clonagem terminar!
 
-> Importante: Clonagem via usuário (mode=user) possui uma pausa de 10 segundos entre posts. Já clonagem via bot (mode=bot) é mais rápido, possuindo uma pausa de apenas 1 segundo entre posts. Se você desejar usar o clonechat em maior velocidade, gere um bot token e mude flag "mode" de "user" para "bot" no arquivo de configuração em `user/config.ini`. Este modo funciona apenas para clonagem de canal que você é dono e pode por seu bot pessoal como administrador.
+> Importante: Clonagem via usuário (mode=user) possui uma pausa de 10 segundos entre posts. Já clonagem via bot (mode=bot) é mais rápida, possuindo uma pausa de 3 segundos entre posts, porque o telegram limita a frequência de envio de mensagens em até [20 mensagens por segundo](https://limits.tginfo.me/pt-BR) no mesmo chat. Se você desejar usar o clonechat em maior velocidade, gere um bot token e mude flag "mode" de "user" para "bot" no arquivo de configuração em `user/config.ini`. Este modo funciona apenas para clonagem de canal que você é dono e pode por seu bot pessoal como administrador.
 
 ### Clonar canal/grupo com conteúdo protegido
 
@@ -124,6 +125,22 @@ O passo a passo para o uso de cada um dos dois scripts é bem parecido com o que
 
 Mas tem um diferencial legal: Nestes scripts de clonechat_protect, a identificação do canal de origem e destino pode ser feita por um **link de mensagem** do canal. Para obter o link de uma mensagem, clique com o botão direito sobre a mensagem e selecione "Copiar link". Em seguida cole o link no terminal quando for solicitado.
 
+Ao rodar cada script (down e up), pode ser que você veja a mensagem "`Hold on...`". Isso significa que o script está baixando o histórico do canal de origem, que é um arquivo json de metadados de postagens. Portanto, quando essa mensagem aparecer, basta esperar um pouco. Demora cerca de 1 segundo para cada 100 mensagens no histórico do canal de origem.
+
+Mas não se preocupe, assim que o download dos metadados estiver completo, cada script prosseguirá com sua missão.
+
+
+E se por acaso um dos scripts seja interrompido, basta o fechar e abrir novamente que ele retomará de onde parou.
+
+O clonechat protect é capaz de retomar a clonagem de onde parou. Às vezes, um script pode ser interrompido por algum motivo. Se isso acontecer, tudo que você precisa fazer é fechar o script e abri-lo novamente. O script é inteligente e sabe exatamente onde parou, então ele continuará o trabalho de onde foi interrompido.
+
+Existem canais protegidos que são gigantes e talvez seu computador não tenha espaço livre suficiente para armazenar todas as postagens. O clonechat é capaz de lidar com isso. Ele vai baixar as postagens até o momento em que a pasta temporária de download atinja um certo limite de armazenamento.
+
+Originalmente, o limite é de 5.000 MiB. Quando esse limite é atingido, o clonechat vai parar de baixar, e aguardar a pasta temporária de download diminua de tamanho. Isso sempre ocorre pois quando o script termina de enviar um arquivo para o canal de destino, ele remove o arquivo da pasta temporária.
+
+Desse modo o clonechat se mantém no processo de baixar, enviar e apagar arquivos, com o cuidado de não encher demais o seu armazenamento. Assim, você não precisa se preocupar com espaço em disco.
+
+Caso você deseje alterar o limite de armazenamento, basta editar o arquivo `user/config.ini` e alterar o valor da chave `cache_folder_max_size_mb` para o valor desejado. O valor é em megabytes.
 
 ### Opção 2: via linha de comando (desatualizado)
 
@@ -146,7 +163,7 @@ Comando: `python clonechat.py --help`
 
 ## Perguntas frequentes
 
-### Instalar o PIP
+### Como instalar o PIP
 
 PIP é um gerenciador de pacotes do python. Normalmente ele já vem instalado com o python. Para verificar se você tem o pip instalado, abra um terminal e digite `where pip`. Se aparecer o caminho do pip, está tudo certo.
 Se não aparecer, você pode instalar o pip com:
