@@ -121,26 +121,23 @@ Você precisa ter o api_id e api_hash da sua conta antes de executar o clonechat
 
 > *Por que precisa executar os 2? Por que um vai baixando as postagens da origem enquanto o outro vai enviando as postagens pro destino. Trabalham juntos.*
 
-O passo a passo para o uso de cada um dos dois scripts é bem parecido com o que foi descrito no tópico anterior. Apenas siga as instruções do terminal.
+O procedimento para usar cada um dos dois scripts é parecido com o que foi descrito no tópico anterior. É só seguir as instruções que aparecem no terminal.
 
-Mas tem um diferencial legal: Nestes scripts de clonechat_protect, a identificação do canal de origem e destino pode ser feita por um **link de mensagem** do canal. Para obter o link de uma mensagem, clique com o botão direito sobre a mensagem e selecione "Copiar link". Em seguida cole o link no terminal quando for solicitado.
+Mas há uma diferença importante: nesses scripts do clonechat_protect, você pode identificar o canal de origem e de destino usando um **link de mensagem** do canal. Para pegar o link de uma mensagem, clique com o botão direito na mensagem e selecione "Copiar link". Depois, cole o link no terminal quando for solicitado.
 
-Ao rodar cada script (down e up), pode ser que você veja a mensagem "`Hold on...`". Isso significa que o script está baixando o histórico do canal de origem, que é um arquivo json de metadados de postagens. Portanto, quando essa mensagem aparecer, basta esperar um pouco. Demora cerca de 1 segundo para cada 100 mensagens no histórico do canal de origem.
+Ao rodar cada script (down e up), pode ser que apareça a mensagem "`Hold on...`". Isso quer dizer que o script está baixando o histórico do canal de origem, que é um arquivo JSON com as informações das postagens. Quando essa mensagem aparecer, é só esperar um pouco até que o processo termine. Geralmente, leva cerca de 1 segundo para baixar os metadados de 100 mensagens no histórico.
 
-Mas não se preocupe, assim que o download dos metadados estiver completo, cada script prosseguirá com sua missão.
+Não se preocupe, assim que o download terminar, o script continuará funcionando normalmente.
 
+Se, por acaso, algum script for interrompido, é só fechá-lo e abri-lo novamente. O clonechat_protect consegue retomar o trabalho de onde parou, então nada será perdido.
 
-E se por acaso um dos scripts seja interrompido, basta o fechar e abrir novamente que ele retomará de onde parou.
+Às vezes, o canal de origem pode ter muitos dados e talvez seu computador não tenha espaço suficiente no disco para guardar tudo. O clonechat_protect foi feito para lidar com isso. Ele vai baixar as postagens até que a pasta temporária de download atinja um certo limite de armazenamento.
 
-O clonechat protect é capaz de retomar a clonagem de onde parou. Às vezes, um script pode ser interrompido por algum motivo. Se isso acontecer, tudo que você precisa fazer é fechar o script e abri-lo novamente. O script é inteligente e sabe exatamente onde parou, então ele continuará o trabalho de onde foi interrompido.
+O limite padrão é de 5.000 MiB. Quando esse limite é atingido, o clonechat_protect vai parar de baixar e esperar até que a pasta temporária tenha mais espaço. Isso acontece automaticamente, porque, ao terminar de enviar um arquivo para o canal de destino, o script remove esse arquivo da pasta temporária.
 
-Existem canais protegidos que são gigantes e talvez seu computador não tenha espaço livre suficiente para armazenar todas as postagens. O clonechat é capaz de lidar com isso. Ele vai baixar as postagens até o momento em que a pasta temporária de download atinja um certo limite de armazenamento.
+Assim, o clonechat_protect continua em um ciclo de baixar, enviar e apagar arquivos, garantindo que o armazenamento do seu computador não fique cheio demais. Então, você não precisa se preocupar com o espaço em disco.
 
-Originalmente, o limite é de 5.000 MiB. Quando esse limite é atingido, o clonechat vai parar de baixar, e aguardar a pasta temporária de download diminua de tamanho. Isso sempre ocorre pois quando o script termina de enviar um arquivo para o canal de destino, ele remove o arquivo da pasta temporária.
-
-Desse modo o clonechat se mantém no processo de baixar, enviar e apagar arquivos, com o cuidado de não encher demais o seu armazenamento. Assim, você não precisa se preocupar com espaço em disco.
-
-Caso você deseje alterar o limite de armazenamento, basta editar o arquivo `user/config.ini` e alterar o valor da chave `cache_folder_max_size_mb` para o valor desejado. O valor é em megabytes.
+Se quiser mudar o limite de armazenamento, é só editar o arquivo "`user/config.ini`" e ajustar o valor da chave "`cache_folder_max_size_mb`" para o que você preferir. O valor deve ser escrito em megabytes.
 
 ### Opção 2: via linha de comando (desatualizado)
 
@@ -223,7 +220,7 @@ Existem várias formas de obter o chat_id de um canal. Mostraremos algumas delas
 
 Bot token é a credencial de acesso para controlar um bot de telegram.
 
-O encaminho de mensagens por bot é mais rápido. O telegram limita a permissão sobre volume de postagens de forma diferente entre a interface de usuário e a interface de bots. Para manter a segurança e ficar livre de punições do telegram, é recomendável que a conta do usuário não encaminhe mais que 6 mensagens por minuto. Já para bots, o limite sobe para 60 mensagens por minuto. Assim, o Clonechat opera 10 vezes mais rápido quando em `mode=bot`.
+O encaminho de mensagens por bot é mais rápido. O telegram limita a permissão sobre volume de postagens de forma diferente entre a interface de usuário e a interface de bots. Para manter a segurança e ficar livre de punições do telegram, é recomendável que a conta do usuário não encaminhe mais que 6 mensagens por minuto. Já para bots, o limite sobe para 60 mensagens por minuto. Assim, o Clonechat opera 3 vezes mais rápido quando em `mode=bot`.
 
 O uso em modo bot possui algumas exigências:
 - O bot precisa ser administrador do canal de origem e destino
