@@ -41,10 +41,23 @@ def ignore_types():
 
 def enrich_fields(cloneplan_dict, msg, key):
 
+    def generate_file_name(msg):
+        mime_type_to_extension = {
+            "video/mp4": ".mp4",
+            "video/quicktime": ".mov",
+        }
+        extension = mime_type_to_extension.get(
+            msg["video"]["mime_type"], ".mkv"
+        )
+        return f'{msg["id"]}-{msg["video"]["file_unique_id"]}{extension}'
+
     if key == "video":
         cloneplan_dict["duration"] = msg["video"]["duration"]
         cloneplan_dict["file_size"] = msg["video"]["file_size"]
-        cloneplan_dict["file_name"] = msg["video"]["file_name"]
+        cloneplan_dict["file_name"] = msg["video"].get(
+            "file_name",
+            generate_file_name(msg),
+        )
         return cloneplan_dict
     if key == "document":
         cloneplan_dict["file_size"] = msg["document"]["file_size"]
