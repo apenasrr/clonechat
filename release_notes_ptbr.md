@@ -1,5 +1,8 @@
 # ReleaseNotes
 
+**v117 2024-08-09**
+- Fix: Erro "KeyError file_name" ao executar clonechat_protect_dw.
+
 **v116 2024-08-08**
 - Fix: clonechat_protect_up gerava erro "`json.decoder.JSONDecodeError`" ao executar a função show_history_overview. Causado por o histórico estar em processo de download. Agora emite mensagem de espera pelo download do histórico.
 
