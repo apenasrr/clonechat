@@ -297,7 +297,7 @@ def show_history_overview(history_path: Path) -> list[str]:
     print(f"\nChat History: {history_path.parent.name}")
     print(
         f"duration: {data_metrics['hours']}h {data_metrics['minutes']}m "
-        + f"{data_metrics['seconds']}s"
+        + f"{data_metrics['seconds']:.1f}s"
     )
     print(f"total size: {(data_metrics['total_size'] / 1024**3):.3f} GB")
     counter_type = get_msg_type_count(list_type, list_msgs)
