@@ -1,5 +1,8 @@
 # ReleaseNotes
 
+**v118 2024-08-11**
+- Feat: Para grupo com função de tópicos, agora existe capacidade de baixar todos os arquivos de um tópico específico através do `exec_downloadall.bat` e colando o link de uma mensagem do tópico. Também funciona para grupo com conteúdo protegido.
+
 **v117 2024-08-09**
 - Fix: Erro "KeyError file_name" ao executar clonechat_protect_dw.
 

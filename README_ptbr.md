@@ -33,11 +33,12 @@ Se essa for sua situação, o CloneChat pode te ajudar. 😁
 - Clonar as postagens de um canal/grupo para outro canal/grupo. Use o `exec_clonechat.bat`
 - Clonar as postagens de um canal/grupo com **conteúdo protegido** (mas é bem lento). Use `exec_clonechat_protect_dw.bat` e `exec_clonechat_protect_up.bat`
 - Baixar TODOS os arquivos de um canal (fotos, vídeos, áudios, documentos, etc) e salva em ordem de postagem. Use `exec_downloadall.bat`
+- Baixar TODOS os arquivos de um "tópico" em um grupo com essa função. Use `exec_downloadtopic.bat` e cole um link de mensagem do tópico.
 
 ## Problemas conhecidos
 
 - No clonechat_protect, sem usar conta premium do telegram, ao tentar clonar uma postagem com texto muito longo ou arquivos com mais de 2000 MiB, vai resultar em erro. Isso ocorre porque postagem com essas características só podem ser criadas por uma conta premium do telegram. No futuro a situação será contornada com uma postagem particionada do texto ou documento.
-- Grupo habilitado com "tópicos" não é suportado pelo Clonechat. Ainda...
+- Em grupo com "tópicos", mesmo com conteúdo protegido, é possível fazer download de todos os arquivos de um tópico específico. Mas a **clonagem** não é suportada pelo Clonechat. Ainda...
 - Vídeos clonados perdem a thumbnail.
 
 ## Configuração
@@ -157,6 +158,21 @@ Exemplo: `python clonechat.py --orig=-100222222 --dest=-10011111111 --new=2`
 
 Para verificar todos comendos de terminal:
 Comando: `python clonechat.py --help`
+
+### Baixar todos os arquivos de canal ou grupo
+
+Mesmo canal ou grupo com conteúdo protegido, é possível baixar todos os arquivos com o Clonechat.
+
+- Use o script `exec_downloadall.bat`.
+- Siga os mesmos passos descritos no tópico **"Clonar canal/grupo com conteúdo protegido"**.
+- O conteúdo será baixado em `"protect_content/Cache/chat_id-nome_do_chat"`.
+
+**Para fazer download de tópico específico em Grupo**
+
+Existem grupos com a função de tópicos ativada. Nesses grupos, é possível fazer download de todos os arquivos de um tópico específico por vez.
+
+- No momento em que no terminal pedir a identificação do canal de origem, cole um **link da mensagem** do tópico que você deseja baixar.
+
 
 ## Perguntas frequentes
 
