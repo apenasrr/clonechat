@@ -27,42 +27,69 @@ def main():
         client, message
     )
     chat_origin_title = parser.sanitize_string(chat_origin_info["chat_title"])
+    chat_origin_title = (
+        chat_origin_title[:100].strip()
+        if len(chat_origin_title) > 100
+        else chat_origin_title
+    )
     chat_origin_id = chat_origin_info["chat_id"]
-    print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
+    chat_origin_topic_id: int | None = chat_origin_info.get("topic_id", None)
+    chat_origin_topic_name = chat_origin_info.get("topic_name", None)
+    if chat_origin_topic_name:
+        print(
+            f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}-"
+            + f"{chat_origin_topic_name}\n"
+        )
+    else:
+        print(f"ORIGIN: {abs(chat_origin_id)}-{chat_origin_title}\n")
 
     # cloneplan_path
     folder_path_cloneplan = Path("protect_content") / "log_cloneplan"
     folder_path_cloneplan.mkdir(exist_ok=True)
     cloneplan_path = clonechat_protect_down.get_cloneplan_path(
-        folder_path_cloneplan, chat_origin_id, chat_origin_title
+        folder_path_cloneplan,
+        chat_origin_id,
+        chat_origin_title,
+        chat_origin_topic_id,
+        chat_origin_topic_name,
     )
-
+    history_path = clonechat_protect_down.get_history_path(
+        chat_origin_title, chat_origin_id
+    )
     new_clone = True
-    if cloneplan_path.exists():
-        new_clone = clonechat_protect_down.ask_for_new_clone()
 
-    if new_clone:
-        history_path = clonechat_protect_down.get_history_path(
-            chat_origin_title, chat_origin_id
-        )
+    if not history_path.exists():
         clonechat_protect_down.save_history(
             client, chat_origin_id, history_path
         )
 
-        cloneplan.save_cloneplan(history_path, cloneplan_path)
+    if cloneplan_path.exists():
+        new_clone = clonechat_protect_down.ask_for_new_clone()
+
+    if new_clone:
+        cloneplan.save_cloneplan(
+            history_path, cloneplan_path, chat_origin_topic_id
+        )
     else:
         history_path = clonechat_protect_down.get_recent_history(
             chat_origin_title, chat_origin_id
         )
-
-    clonechat_protect_down.show_history_overview(history_path)
+    clonechat_protect_down.show_history_overview(
+        history_path, chat_origin_topic_id
+    )
 
     # download_folder
     cache_folder = Path("protect_content") / "Cache"
     cache_folder.mkdir(exist_ok=True)
-    download_folder = (
-        cache_folder / f"{str(abs(chat_origin_id))}-{chat_origin_title}"
-    )
+    if chat_origin_topic_name:
+        download_folder = cache_folder / (
+            f"{str(abs(chat_origin_id))}-{chat_origin_title}-"
+            + f"{chat_origin_topic_name}"
+        )
+    else:
+        download_folder = (
+            cache_folder / f"{str(abs(chat_origin_id))}-{chat_origin_title}"
+        )
     download_folder.mkdir(exist_ok=True)
 
     download.pipe_download(

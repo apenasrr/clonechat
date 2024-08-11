@@ -82,7 +82,26 @@ def enrich_fields(cloneplan_dict, msg, key):
     return cloneplan_dict
 
 
-def create_cloneplan(history_path: Path):
+def create_cloneplan(
+    history_path: Path, topic_id: int | None = None
+) -> list[dict]:
+
+    def need_skip(msg: dict, topic_id: int | None) -> bool:
+        """
+        Determines if the message should be jumped based on topic rule.
+        If it is a group enabled to the topic, check if the message is from the
+        topic needed. If it is, you return false, otherwise you return True.
+        Args:
+            msg (dict): The message dictionary.
+            topic_id (int | None): The topic ID.
+        Returns:
+            bool: True if the message needs to be skipped, False otherwise.
+        """
+
+        if topic_id is None:
+            return False
+        msg_topic_id = msg.get("topics", {}).get("id", 0)
+        return msg_topic_id != topic_id
 
     list_dict = json.load(open(history_path, encoding="utf-8"))
     list_type = msgs_types()
@@ -91,6 +110,8 @@ def create_cloneplan(history_path: Path):
     found = False
     cloneplan_list_dict = []
     for msg in list_dict:
+        if need_skip(msg, topic_id):
+            continue
         cloneplan_dict = {}
         cloneplan_dict["id"] = msg["id"]
         cloneplan_dict["date"] = msg["date"]
@@ -114,8 +135,10 @@ def create_cloneplan(history_path: Path):
     return cloneplan_list_dict
 
 
-def save_cloneplan(history_path, cloneplan_path):
+def save_cloneplan(
+    history_path, cloneplan_path, topic_id: int | None = None
+) -> Path:
 
-    cloneplan_list_dict = create_cloneplan(history_path)
+    cloneplan_list_dict = create_cloneplan(history_path, topic_id)
     save_csv(cloneplan_list_dict, cloneplan_path)
     return cloneplan_path

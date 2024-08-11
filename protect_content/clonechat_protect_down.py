@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import sys
 from configparser import ConfigParser
 from datetime import date
@@ -80,6 +81,49 @@ def get_client(
             return None
 
 
+def get_topic_data_from_link(
+    client: pyrogram.Client, chat_id: str, chat_input: list
+) -> dict[str, any | None]:
+
+    topic_id = None
+    topic_name = None
+
+    base_link = "https://t.me/c/"
+    splits = chat_input.split(base_link)[1].split("/")
+    if len(splits) == 3:
+        topic_id = int(splits[1])
+        message_id = int(splits[-1])
+        topic_name = None
+        # Context: client.get_forum_topics does not return all chat topics.
+        # Therefore, it is necessary to get the message to get the topic_id and
+        # topic_name
+        first_try = True
+        while True:
+            try:
+                message = client.get_messages(chat_id, message_id)
+                message = json.loads(str(message))
+                break
+            except Exception as e:
+                if first_try:
+                    print(f"\n{e}\nAn error occurred. Trying again.")
+                sleep(5)
+                continue
+        topic_id = message.get("topic", {}).get("id", None)
+        topic_name = message.get("topic", {}).get("title", None)
+        topic_name = parser.sanitize_string(topic_name)
+        # se topic_id ou topic_name for None, emitir erro
+        if topic_id is None or topic_name is None:
+            print(
+                f"\nThis chat is a forum: {chat_id}\n"
+                + "Please, repeat posting a message link from a topic."
+            )
+            client.stop()
+            exit(0)
+    else:
+        pass
+    return {"topic_id": topic_id, "topic_name": topic_name}
+
+
 def get_chat_info(
     client: pyrogram.Client, chat_input: Union[int, str]
 ) -> Union[dict, bool]:
@@ -99,16 +143,40 @@ def get_chat_info(
     """
 
     base_link = "https://t.me/c/"
+    topic_id = None
+    topic_name = None
     if base_link in str(chat_input):
         # if chat_input is a message link, convert to chat_id
-        base_chat_id = str(chat_input.split(base_link)[1].split("/")[0])
-        chat_input = "-100" + base_chat_id
+        splits = chat_input.split(base_link)[1].split("/")
+        chat_id = "-100" + str(splits[0])
+        topic_data = get_topic_data_from_link(client, chat_id, chat_input)
+        topic_id = topic_data.get("topic_id", None)
+        topic_name = topic_data.get("topic_name", None)
+        chat_input = chat_id
 
     try:
         chat_obj = client.get_chat(chat_input)
         chat_id = chat_obj.id
         chat_title = chat_obj.title
-        chat_info = {"chat_id": chat_id, "chat_title": chat_title}
+        chat_isforum = chat_obj.is_forum
+        if chat_isforum:
+            if topic_id is None:
+                print(
+                    f"\nThis chat is a forum: {chat_title}\n"
+                    + "Please, repeat posting a message link from a topic."
+                )
+                # TODO: If it is a forum, look for topics list and ask which
+                # one wants
+                client.stop()
+                exit(0)
+            else:
+                pass
+        chat_info = {
+            "chat_id": chat_id,
+            "chat_title": chat_title,
+            "topic_id": topic_id,
+            "topic_name": topic_name,
+        }
         return chat_info
     except ChannelInvalid:  # When you are not part of the channel
         print("\nNon-accessible chat")
@@ -143,7 +211,7 @@ def get_chat_info_until(client: pyrogram.Client, message: str) -> dict:
             break
         else:
             return_ = input(
-                "Press 'Enter' to try again or press something to close:\n"
+                "\nPress 'Enter' to try again or press something to close:\n"
             )
             if return_ == "":
                 pass
@@ -154,22 +222,68 @@ def get_chat_info_until(client: pyrogram.Client, message: str) -> dict:
 
 
 def get_cloneplan_path(
-    folder_path_cloneplan: Path, chat_dest_id: int, chat_dest_title: str
+    folder_path_cloneplan: Path,
+    chat_id: int,
+    chat_title: str,
+    topic_id: int | None = None,
+    topic_name: str | None = None,
 ) -> Path:
 
     folder_path_cloneplan.mkdir(exist_ok=True)
-    clonechat_path = (
-        folder_path_cloneplan
-        / f"cloneplan_{str(abs(chat_dest_id))}-{chat_dest_title}.csv"
-    )
+
+    if topic_id is None:
+        clonechat_path = (
+            folder_path_cloneplan
+            / f"cloneplan_{str(abs(chat_id))}-{chat_title}.csv"
+        )
+    else:
+        # If it is topic, add topic_id and topic_name to the file name
+        clonechat_path = folder_path_cloneplan / (
+            f"cloneplan_{str(abs(chat_id))}-{chat_title}-"
+            + f"{str(topic_id)}-{topic_name}.csv"
+        )
     return clonechat_path
 
 
 def get_history_path(chat_title: str, chat_id: int) -> Path:
+    """
+    Determine the file path for saving the chat history.
+
+    Constructs a directory path based on the chat title and ID, ensuring the
+    directory exists.
+    If the directory already contains history files, it prompts the USER to
+    decide whether to use the most recent history file.
+    If the USER chooses to use the latest history, the function returns the
+    path to that file.
+    Otherwise, it creates a new directory if it doesn't exist and generates a
+    new file path based on the current date for saving the chat history.
+
+    Args:
+        chat_title (str): The title of the chat.
+        chat_id (int): The ID of the chat.
+
+    Returns:
+        Path: The path to the history file.
+    """
 
     log_chats_path = Path("protect_content") / "log_chats"
     log_chats_path.mkdir(exist_ok=True)
     folder_chat = log_chats_path / f"{str(abs(chat_id))}-{str(chat_title)}"
+    # If history folder exists, ask if you want to use the latest history
+    if folder_chat.exists():
+        list_history_path = list(folder_chat.iterdir())
+        if len(list_history_path) > 0:
+            recent_history = list_history_path[-1]
+            print(
+                f"Use the last history: {recent_history.name} ?",
+                "1 - Yes",
+                "2 - No",
+                sep="\n",
+            )
+            answer = input("Answer: ")
+            if answer in ["1", ""]:
+                return recent_history
+
     folder_chat.mkdir(exist_ok=True)
     str_today = date.today().strftime("%Y%m%d")
     history_path = folder_chat / f"msgs_chat_{abs(chat_id)}_{str_today}.json"
@@ -177,20 +291,74 @@ def get_history_path(chat_title: str, chat_id: int) -> Path:
 
 
 def save_history(client: pyrogram.Client, chat_id: int, history_path: Path):
+    """
+    Save the message history of a chat to a JSON file.
+
+    Collects and saves the message history of a chat in a structured manner.
+    The messages are collected in blocks of 200 and saved in intermediate JSON
+    files within a temporary folder. After collecting all messages, the
+    intermediate JSON files are concatenated into a single JSON file, which is
+    saved at the specified history path.
+    The temporary folder is then removed.
+
+    Average speed of 11 seconds for 1.000 messages.
+
+    Args:
+        client (pyrogram.Client): The Pyrogram client instance.
+        chat_id (int): The ID of the chat.
+        history_path (Path): The path to save the message history JSON file.
+    Returns:
+        None
+    """
 
     print(f"\nHold on... Mapping message history in: {str(history_path)}")
-    # save history json
+
+    date_today = (history_path.stem).split("_")[-1]
+    # save history. In several JSON files. Each json with 200 messages in
+    # temporary folder
+    history_path_folder_temp = history_path.parent / date_today
+    history_path_folder_temp.mkdir(exist_ok=True)
     list_dict_msgs = []
+    index = 1
     iter_message = client.get_chat_history(chat_id)
     for message in iter_message:
         dict_message = json.loads(str(message))
         list_dict_msgs.append(dict_message)
         if len(list_dict_msgs) % 200 == 0:
             sleep(2)
-        json.dump(
-            list_dict_msgs, open(history_path, "w", encoding="utf-8"), indent=2
+            history_path_temp = history_path_folder_temp / (
+                str(index) + "_" + history_path.name
+            )
+            json.dump(
+                list_dict_msgs,
+                open(history_path_temp, "w", encoding="utf-8"),
+                indent=2,
+            )
+            list_dict_msgs = []
+        index += 1
+    # If there are remaining messages, save last JSON
+    if len(list_dict_msgs) > 0:
+        history_path_temp = history_path_folder_temp / (
+            str(index) + "_" + history_path.name
         )
+        json.dump(
+            list_dict_msgs,
+            open(history_path_temp, "w", encoding="utf-8"),
+            indent=2,
+        )
+        list_dict_msgs = []
 
+    # concat all JSON from the History_Path_Folder_temp
+    list_dict_msgs = []
+    for file in history_path_folder_temp.iterdir():
+        list_dict_msgs += json.load(open(file, encoding="utf-8"))
+    json.dump(
+        list_dict_msgs,
+        open(history_path, "w", encoding="utf-8"),
+        indent=2,
+    )
+    # remove temporary folder
+    shutil.rmtree(history_path_folder_temp)
     print(f"The chat history was saved. {len(list_dict_msgs)} messages.")
 
 
@@ -216,7 +384,9 @@ def ask_for_new_clone() -> bool:
     return new_clone
 
 
-def show_history_overview(history_path: Path) -> list[str]:
+def show_history_overview(
+    history_path: Path, topic_id: int | None = None
+) -> list[str]:
     def msgs_types():
         str_list_types = """photo
         text
@@ -242,8 +412,9 @@ def show_history_overview(history_path: Path) -> list[str]:
         total_video_duration = 0
         total_size = 0
         for _, msg in enumerate(list_msgs):
-            # if index == 100:
-            #     break
+            if topic_id is not None:
+                if msg.get("topics", {}).get("id", None) != topic_id:
+                    continue
             if isinstance(msg, str):
                 msg = json.loads(msg)
             if isinstance(msg, str):
@@ -273,6 +444,9 @@ def show_history_overview(history_path: Path) -> list[str]:
                 msg = json.loads(msg)
             if isinstance(msg, str):
                 continue
+            if topic_id is not None:
+                if msg.get("topics", {}).get("id", None) != topic_id:
+                    continue
             for key in msg.keys():
                 if key in list_type:
                     value = counter_type.get(key, 0)

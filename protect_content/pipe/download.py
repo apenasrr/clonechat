@@ -54,6 +54,12 @@ def download_media_core(
         if return_ is None:
             print(f"{prefix}: {file_path.name} - Error. Retrying in 5 seconds")
             sleep(5)
+        elif file_path.exists():
+            if os.path.getsize(file_path) == 0:
+                file_path.unlink()
+                sleep(5)
+            else:
+                break
         else:
             break
 
