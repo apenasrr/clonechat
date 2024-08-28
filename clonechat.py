@@ -9,11 +9,20 @@ from pathlib import Path
 
 import pyrogram
 from pyrogram.errors import ChannelInvalid, FloodWait, PeerIdInvalid
+import pyrogram.utils as utils
 
 from setup import version
 
 DELAY_AMOUNT = 10
 
+def get_peer_type(peer_id: int) -> str:
+    peer_id_str = str(peer_id)
+    if not peer_id_str.startswith("-"):
+        return "user"
+    elif peer_id_str.startswith("-100"):
+        return "channel"
+    else:
+        return "chat"
 
 def get_config_data(path_file_config):
     """get default configuration data from file config.ini
@@ -582,6 +591,8 @@ def main():
 config_data = get_config_data(
     path_file_config=os.path.join("user", "config.ini")
 )
+
+utils.get_peer_type = get_peer_type
 
 USER_DELAY_SECONDS = float(config_data.get("user_delay_seconds"))
 BOT_DELAY_SECONDS = float(config_data.get("bot_delay_seconds"))
